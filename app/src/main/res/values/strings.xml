@@ -1,0 +1,4 @@
+<resources>
+    <!-- Working name. "PocketBook" is an existing e-reader brand: choose a distinct name before publishing. -->
+    <string name="app_name">Pocketbook</string>
+</resources>

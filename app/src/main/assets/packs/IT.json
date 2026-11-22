@@ -1,0 +1,204 @@
+{
+  "code": "IT",
+  "name": "Italy",
+  "defaultCity": "Rome",
+  "flag": "🇮🇹",
+  "timeZone": "Europe/Rome",
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "indicativeRatePerGbp": 1.15,
+  "plugs": [
+    "C",
+    "F",
+    "L"
+  ],
+  "voltage": 230,
+  "frequency": "50",
+  "exitCode": "00",
+  "callingCode": "39",
+  "lat": 41.9028,
+  "lon": 12.4964,
+  "eu": true,
+  "schengen": true,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "All emergencies",
+      "number": "112",
+      "primary": true
+    },
+    {
+      "label": "State police",
+      "number": "113",
+      "primary": false
+    },
+    {
+      "label": "Ambulance",
+      "number": "118",
+      "primary": false
+    },
+    {
+      "label": "Fire",
+      "number": "115",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Not expected. A \"coperto\" (cover charge) is often already on the bill",
+    "Round up or leave small change for good service",
+    "Coffee at the bar is cheaper than sitting at a table"
+  ],
+  "etiquette": [
+    "Cover shoulders and knees in churches, including St Peter's",
+    "Cappuccino is a morning drink. Order \"un caffè\" after meals"
+  ],
+  "avoid": [
+    "Sitting on the Spanish Steps or paddling in fountains can bring a fine"
+  ],
+  "water": "Tap water is safe to drink. Rome's free \"nasoni\" street fountains are drinkable.",
+  "scams": [
+    "\"Free\" friendship bracelets tied on your wrist, then a demand for money",
+    "Costumed gladiators charging for photos"
+  ],
+  "language": "Italian",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "Buongiorno",
+      "pronunciation": "bwon-JOR-no"
+    },
+    {
+      "english": "Thank you",
+      "local": "Grazie",
+      "pronunciation": "GRAT-see-eh"
+    },
+    {
+      "english": "Please",
+      "local": "Per favore",
+      "pronunciation": "per fa-VO-reh"
+    },
+    {
+      "english": "How much is it?",
+      "local": "Quanto costa?",
+      "pronunciation": "KWAN-to KOS-ta?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "Il conto, per favore",
+      "pronunciation": "eel KON-to, per fa-VO-reh"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "Dov'è il bagno?",
+      "pronunciation": "do-VEH eel BAN-yo?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "Ho bisogno di un medico",
+      "pronunciation": "oh bee-ZON-yo dee oon MEH-dee-ko"
+    },
+    {
+      "english": "Help!",
+      "local": "Aiuto!",
+      "pronunciation": "ah-YOO-to!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "Coperto",
+      "romanised": "",
+      "meaning": "Cover charge per person"
+    },
+    {
+      "term": "Antipasto",
+      "romanised": "",
+      "meaning": "Starter"
+    },
+    {
+      "term": "Primo",
+      "romanised": "",
+      "meaning": "First course, usually pasta or risotto"
+    },
+    {
+      "term": "Secondo",
+      "romanised": "",
+      "meaning": "Main course of meat or fish"
+    },
+    {
+      "term": "Contorno",
+      "romanised": "",
+      "meaning": "Side dish, ordered separately"
+    },
+    {
+      "term": "Maiale",
+      "romanised": "",
+      "meaning": "Pork"
+    },
+    {
+      "term": "Manzo",
+      "romanised": "",
+      "meaning": "Beef"
+    },
+    {
+      "term": "Vitello",
+      "romanised": "",
+      "meaning": "Veal"
+    },
+    {
+      "term": "Frutti di mare",
+      "romanised": "",
+      "meaning": "Seafood"
+    },
+    {
+      "term": "Acqua frizzante",
+      "romanised": "",
+      "meaning": "Sparkling water"
+    }
+  ],
+  "driving": {
+    "side": "Right",
+    "speedLimits": "50 / 90 / 130 km/h (110 in rain)",
+    "mustCarry": "Warning triangle and reflective vest",
+    "notes": [
+      "ZTL limited-traffic zones in historic centres: camera fines can arrive months later",
+      "Motorway (autostrada) tolls apply",
+      "A UK photocard licence is accepted"
+    ]
+  },
+  "idp": "",
+  "medicines": "Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor's letter.",
+  "entry": [
+    "EU Entry/Exit System: fingerprints and photo are taken at your first Schengen entry",
+    "ETIAS travel authorisation: required once launched, so check the current status before you fly"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 16,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 15,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 14,
+      "icon": "☁️"
+    },
+    {
+      "tempC": 16,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 17,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 15,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 14,
+      "icon": "🌧"
+    }
+  ]
+}

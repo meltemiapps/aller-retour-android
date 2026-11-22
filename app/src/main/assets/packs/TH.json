@@ -1,0 +1,206 @@
+{
+  "code": "TH",
+  "name": "Thailand",
+  "defaultCity": "Bangkok",
+  "flag": "🇹🇭",
+  "timeZone": "Asia/Bangkok",
+  "currency": "THB",
+  "currencySymbol": "฿",
+  "indicativeRatePerGbp": 44,
+  "plugs": [
+    "A",
+    "B",
+    "C",
+    "O"
+  ],
+  "voltage": 230,
+  "frequency": "50",
+  "exitCode": "001",
+  "callingCode": "66",
+  "lat": 13.7563,
+  "lon": 100.5018,
+  "eu": false,
+  "schengen": false,
+  "passportMonthsOnArrival": 6,
+  "emergency": [
+    {
+      "label": "Tourist police",
+      "number": "1155",
+      "primary": true
+    },
+    {
+      "label": "Police",
+      "number": "191",
+      "primary": false
+    },
+    {
+      "label": "Ambulance",
+      "number": "1669",
+      "primary": false
+    },
+    {
+      "label": "Fire",
+      "number": "199",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Restaurants: round up or 10% where no service charge is added",
+    "Massage: ฿50–100",
+    "Taxis: round up"
+  ],
+  "etiquette": [
+    "Cover shoulders and knees at temples and remove shoes",
+    "Never criticise the monarchy. It is a serious criminal offence",
+    "The head is sacred, so avoid touching anyone's head"
+  ],
+  "avoid": [
+    "Do not point your feet at people or Buddha images"
+  ],
+  "water": "Do not drink tap water. Use bottled or filtered water, and check that ice is made commercially (it usually has a hole in the middle).",
+  "scams": [
+    "\"The Grand Palace is closed today\" followed by a tuk-tuk to a gem shop",
+    "Jet-ski damage claims at beach resorts"
+  ],
+  "language": "Thai",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "สวัสดีครับ/ค่ะ",
+      "pronunciation": "Sawasdee khrap/kha"
+    },
+    {
+      "english": "Thank you",
+      "local": "ขอบคุณครับ/ค่ะ",
+      "pronunciation": "Khop khun khrap/kha"
+    },
+    {
+      "english": "How much is it?",
+      "local": "เท่าไหร่",
+      "pronunciation": "Tao rai?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "เช็คบิล",
+      "pronunciation": "Check bin"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "ห้องน้ำอยู่ที่ไหน",
+      "pronunciation": "Hong nam yoo tee nai?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "ต้องการหมอ",
+      "pronunciation": "Tong-gan mor"
+    },
+    {
+      "english": "Not spicy",
+      "local": "ไม่เผ็ด",
+      "pronunciation": "Mai phet"
+    },
+    {
+      "english": "Help!",
+      "local": "ช่วยด้วย",
+      "pronunciation": "Chuay duay!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "ผัดไทย",
+      "romanised": "Pad thai",
+      "meaning": "Stir-fried rice noodles"
+    },
+    {
+      "term": "ต้มยำ",
+      "romanised": "Tom yum",
+      "meaning": "Hot and sour soup"
+    },
+    {
+      "term": "แกงเขียวหวาน",
+      "romanised": "Gaeng keow wan",
+      "meaning": "Green curry"
+    },
+    {
+      "term": "ข้าวผัด",
+      "romanised": "Khao pad",
+      "meaning": "Fried rice"
+    },
+    {
+      "term": "ไก่",
+      "romanised": "Gai",
+      "meaning": "Chicken"
+    },
+    {
+      "term": "หมู",
+      "romanised": "Moo",
+      "meaning": "Pork"
+    },
+    {
+      "term": "กุ้ง",
+      "romanised": "Goong",
+      "meaning": "Prawn"
+    },
+    {
+      "term": "ส้มตำ",
+      "romanised": "Som tam",
+      "meaning": "Green papaya salad (often very spicy)"
+    },
+    {
+      "term": "เผ็ด",
+      "romanised": "Phet",
+      "meaning": "Spicy"
+    },
+    {
+      "term": "ข้าวเหนียว",
+      "romanised": "Khao niao",
+      "meaning": "Sticky rice"
+    }
+  ],
+  "driving": {
+    "side": "Left",
+    "speedLimits": "80–90 km/h on highways, 120 km/h on motorways",
+    "mustCarry": "Nothing extra required",
+    "notes": [
+      "You need a 1949 IDP. Insurance may not pay out without it",
+      "Helmets are compulsory on scooters. Travel insurance often excludes motorbikes unless you hold a full motorcycle licence"
+    ]
+  },
+  "idp": "Required (1949 IDP)",
+  "medicines": "Some medicines, such as strong painkillers and some ADHD and sleep medication, need a Thai FDA permit. Carry your prescription and keep medicines in their original packs.",
+  "entry": [
+    "Short tourist stays are visa-exempt for UK visitors, but check the current length",
+    "Complete the Thailand Digital Arrival Card (TDAC) online before you arrive",
+    "Passport valid for 6 months on arrival"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 33,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 32,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 31,
+      "icon": "⛈"
+    },
+    {
+      "tempC": 33,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 32,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 31,
+      "icon": "⛈"
+    },
+    {
+      "tempC": 33,
+      "icon": "☀️"
+    }
+  ]
+}

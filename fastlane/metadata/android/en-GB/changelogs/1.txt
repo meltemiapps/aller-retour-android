@@ -1,0 +1,1 @@
+First release: route planning, money, safety tools, country guide and packing lists. Fully offline, with no internet permission.

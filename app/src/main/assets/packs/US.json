@@ -1,0 +1,153 @@
+{
+  "code": "US",
+  "name": "United States",
+  "defaultCity": "New York",
+  "flag": "🇺🇸",
+  "timeZone": "America/New_York",
+  "currency": "USD",
+  "currencySymbol": "$",
+  "indicativeRatePerGbp": 1.32,
+  "plugs": [
+    "A",
+    "B"
+  ],
+  "voltage": 120,
+  "frequency": "60",
+  "exitCode": "011",
+  "callingCode": "1",
+  "lat": 40.7128,
+  "lon": -74.006,
+  "eu": false,
+  "schengen": false,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "All emergencies",
+      "number": "911",
+      "primary": true
+    },
+    {
+      "label": "Non-emergency (NYC)",
+      "number": "311",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Restaurants: 18–22% expected on the pre-tax bill",
+    "Bars: $1–2 per drink",
+    "Taxis and rideshare: 15–20%",
+    "Prices are shown before sales tax"
+  ],
+  "etiquette": [
+    "Queue properly and keep a little personal space",
+    "Service staff rely on tips as part of their wages"
+  ],
+  "avoid": [
+    "Not tipping is seen as a strong complaint, not a neutral choice"
+  ],
+  "water": "Tap water is safe to drink across almost all of the country.",
+  "scams": [
+    "Fake \"charity\" or CD sellers in Times Square",
+    "Costumed characters asking for money after a photo"
+  ],
+  "language": "English",
+  "phrases": [],
+  "menu": [
+    {
+      "term": "Entrée",
+      "romanised": "",
+      "meaning": "Main course (not a starter)"
+    },
+    {
+      "term": "Appetizer",
+      "romanised": "",
+      "meaning": "Starter"
+    },
+    {
+      "term": "Check",
+      "romanised": "",
+      "meaning": "The bill"
+    },
+    {
+      "term": "Biscuit",
+      "romanised": "",
+      "meaning": "Scone-like bread roll"
+    },
+    {
+      "term": "Grits",
+      "romanised": "",
+      "meaning": "Ground corn porridge"
+    },
+    {
+      "term": "Side",
+      "romanised": "",
+      "meaning": "Side dish"
+    },
+    {
+      "term": "Sunny side up",
+      "romanised": "",
+      "meaning": "Fried egg, not flipped"
+    },
+    {
+      "term": "Over easy",
+      "romanised": "",
+      "meaning": "Fried egg, flipped, runny yolk"
+    },
+    {
+      "term": "Soda",
+      "romanised": "",
+      "meaning": "Fizzy drink"
+    },
+    {
+      "term": "Fries",
+      "romanised": "",
+      "meaning": "Chips"
+    }
+  ],
+  "driving": {
+    "side": "Right",
+    "speedLimits": "25–35 mph in town, 55–75 mph on highways (varies by state)",
+    "mustCarry": "Nothing extra required. Rental cars include the essentials",
+    "notes": [
+      "Turning right on a red light is usually allowed after a full stop, but not in New York City",
+      "Never pass a school bus with its stop sign out",
+      "Most rental firms accept a UK licence. An IDP is recommended"
+    ]
+  },
+  "idp": "Recommended",
+  "medicines": "Keep medicines in their original labelled containers with a copy of the prescription. Some medicines sold over the counter in the UK are prescription-only in the US.",
+  "entry": [
+    "ESTA approved before you fly (apply only on the official US government site)",
+    "Passport valid for your whole stay"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 9,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 7,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 6,
+      "icon": "☁️"
+    },
+    {
+      "tempC": 8,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 10,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 11,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 8,
+      "icon": "🌧"
+    }
+  ]
+}

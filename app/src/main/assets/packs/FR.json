@@ -1,0 +1,203 @@
+{
+  "code": "FR",
+  "name": "France",
+  "defaultCity": "Paris",
+  "flag": "🇫🇷",
+  "timeZone": "Europe/Paris",
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "indicativeRatePerGbp": 1.15,
+  "plugs": [
+    "C",
+    "E"
+  ],
+  "voltage": 230,
+  "frequency": "50",
+  "exitCode": "00",
+  "callingCode": "33",
+  "lat": 48.8566,
+  "lon": 2.3522,
+  "eu": true,
+  "schengen": true,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "All emergencies",
+      "number": "112",
+      "primary": true
+    },
+    {
+      "label": "Medical (SAMU)",
+      "number": "15",
+      "primary": false
+    },
+    {
+      "label": "Police",
+      "number": "17",
+      "primary": false
+    },
+    {
+      "label": "Fire",
+      "number": "18",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Service is included by law (\"service compris\")",
+    "Leave small change or round up for good service"
+  ],
+  "etiquette": [
+    "Always say \"Bonjour\" when entering a shop or café",
+    "Dinner usually starts from 7.30–8pm"
+  ],
+  "avoid": [
+    "Don't call a waiter \"garçon\". Use \"Monsieur\" or \"Madame\""
+  ],
+  "water": "Tap water is safe. Ask for \"une carafe d'eau\" and it is free with a meal.",
+  "scams": [
+    "The \"found a gold ring\" trick",
+    "String bracelet sellers around Sacré-Cœur",
+    "Fake petitions near major sights"
+  ],
+  "language": "French",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "Bonjour",
+      "pronunciation": "bon-ZHOOR"
+    },
+    {
+      "english": "Thank you",
+      "local": "Merci",
+      "pronunciation": "mair-SEE"
+    },
+    {
+      "english": "Please",
+      "local": "S'il vous plaît",
+      "pronunciation": "seel voo PLAY"
+    },
+    {
+      "english": "How much is it?",
+      "local": "C'est combien ?",
+      "pronunciation": "say kom-BYAN?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "L'addition, s'il vous plaît",
+      "pronunciation": "la-dee-SYON, seel voo PLAY"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "Où sont les toilettes ?",
+      "pronunciation": "oo son lay twa-LET?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "J'ai besoin d'un médecin",
+      "pronunciation": "zhay be-ZWAN dun med-SAN"
+    },
+    {
+      "english": "Help!",
+      "local": "Au secours !",
+      "pronunciation": "oh se-KOOR!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "Entrée",
+      "romanised": "",
+      "meaning": "Starter (not the main course)"
+    },
+    {
+      "term": "Plat du jour",
+      "romanised": "",
+      "meaning": "Dish of the day"
+    },
+    {
+      "term": "Canard",
+      "romanised": "",
+      "meaning": "Duck"
+    },
+    {
+      "term": "Agneau",
+      "romanised": "",
+      "meaning": "Lamb"
+    },
+    {
+      "term": "Porc",
+      "romanised": "",
+      "meaning": "Pork"
+    },
+    {
+      "term": "Bœuf",
+      "romanised": "",
+      "meaning": "Beef"
+    },
+    {
+      "term": "Veau",
+      "romanised": "",
+      "meaning": "Veal"
+    },
+    {
+      "term": "Saignant",
+      "romanised": "",
+      "meaning": "Rare"
+    },
+    {
+      "term": "À point",
+      "romanised": "",
+      "meaning": "Medium"
+    },
+    {
+      "term": "Bien cuit",
+      "romanised": "",
+      "meaning": "Well done"
+    }
+  ],
+  "driving": {
+    "side": "Right",
+    "speedLimits": "50 / 80 / 130 km/h (110 in rain)",
+    "mustCarry": "Reflective vest within reach and a warning triangle",
+    "notes": [
+      "A Crit'Air emissions sticker is needed in Paris, Lyon and other low-emission zones",
+      "Péage tolls apply on most motorways",
+      "A UK photocard licence is accepted"
+    ]
+  },
+  "idp": "",
+  "medicines": "Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor's letter.",
+  "entry": [
+    "EU Entry/Exit System: fingerprints and photo are taken at your first Schengen entry",
+    "ETIAS travel authorisation: required once launched, so check the current status before you fly"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 10,
+      "icon": "☁️"
+    },
+    {
+      "tempC": 9,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 8,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 10,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 11,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 9,
+      "icon": "☁️"
+    },
+    {
+      "tempC": 8,
+      "icon": "🌧"
+    }
+  ]
+}

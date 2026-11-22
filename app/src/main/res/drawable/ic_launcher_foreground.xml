@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Compass rose on a passport-style page. 108dp adaptive canvas, artwork inside the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#FFF6F2EA"
+        android:pathData="M54,26a28,28 0,1 1,0 56a28,28 0,1 1,0 -56z" />
+    <path android:fillColor="#FF0F6E6E"
+        android:pathData="M54,30a24,24 0,1 1,0 48a24,24 0,1 1,0 -48z" />
+    <path android:fillColor="#FFE2603F"
+        android:pathData="M54,34 L60,54 L54,50 L48,54 Z" />
+    <path android:fillColor="#FFF6F2EA"
+        android:pathData="M54,74 L48,54 L54,58 L60,54 Z" />
+    <path android:fillColor="#FFF6F2EA"
+        android:pathData="M54,51a3,3 0,1 1,0 6a3,3 0,1 1,0 -6z" />
+</vector>

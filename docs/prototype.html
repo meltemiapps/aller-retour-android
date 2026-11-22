@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocketbook — Travel Companion Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#0f1e24; --panel:#f6f2ea; --card:#ffffff; --ink:#14232a; --muted:#5d6b70;
+  --teal:#0f6e6e; --teal2:#14918f; --sand:#e9dfcc; --coral:#e2603f; --ok:#2e8b57; --warn:#c98a12;
+  --line:#e3dccd; --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Manrope,system-ui,sans-serif;background:radial-gradient(1200px 600px at 20% -10%,#1d3a44,var(--bg));color:var(--ink);display:flex;justify-content:center;align-items:flex-start;min-height:100%;padding:24px 12px}
+.wrap{display:flex;gap:28px;align-items:flex-start;max-width:1100px;width:100%;justify-content:center}
+.side{color:#cfdde0;max-width:330px;padding-top:30px;font-size:14px;line-height:1.55}
+.side h1{color:#fff;font-size:26px;line-height:1.15;margin-bottom:10px;letter-spacing:-.4px}
+.side .tag{display:inline-block;background:#1f4a52;color:#9fe3da;border-radius:99px;padding:4px 10px;font-size:12px;font-weight:700;margin-bottom:14px}
+.side ul{margin:12px 0 0 18px}.side li{margin:5px 0}
+.side .note{margin-top:16px;font-size:12px;color:#8fa7ad;border-top:1px solid #2a4650;padding-top:12px}
+@media(max-width:860px){.side{display:none}body{padding:0}}
+.phone{width:400px;max-width:100%;height:820px;max-height:calc(100vh - 48px);background:var(--panel);border-radius:38px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45),0 0 0 10px #0a1418,0 0 0 11px #2b3d43;display:flex;flex-direction:column}
+@media(max-width:860px){.phone{border-radius:0;height:100vh;max-height:none;box-shadow:none;width:100%}}
+.status{display:flex;justify-content:space-between;padding:10px 22px 4px;font-size:12px;font-weight:700;color:var(--ink)}
+.status .air{color:var(--teal)}
+header.top{padding:6px 18px 12px}
+.trip{background:linear-gradient(135deg,var(--teal),#0b4f57);color:#fff;border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden}
+.trip:after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07)}
+.trip .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.trip select{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:6px 8px;font:inherit;font-weight:700;font-size:15px}
+.trip select option{color:#000}
+.trip .meta{font-size:12px;opacity:.85;margin-top:6px}
+.trip .flag{font-size:30px}
+main{flex:1;overflow-y:auto;padding:0 18px 90px;scroll-behavior:smooth}
+nav.tabs{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:8px 6px 14px}
+nav.tabs button{flex:1;background:none;border:0;font:inherit;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:12px;cursor:pointer}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button.on{color:var(--teal);background:#e4f2f0}
+.view{display:none}.view.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:18px 2px 8px;font-weight:800}
+.card{background:var(--card);border-radius:var(--r);padding:14px;border:1px solid var(--line);margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.clock{text-align:center}
+.clock .t{font-size:30px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.clock .l{font-size:12px;color:var(--muted);font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 10px;font-size:12px;font-weight:700}
+.pill.ok{background:#e2f3e8;color:var(--ok)}.pill.warn{background:#fdf0d8;color:#8a5d00}.pill.bad{background:#fbe3dc;color:#a8391d}
+.wx{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.wx div{min-width:52px;text-align:center;background:#f3efe6;border-radius:12px;padding:8px 4px;font-size:12px;font-weight:600}
+.wx b{display:block;font-size:18px;margin:2px 0}
+.check{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed var(--line);font-size:14px;cursor:pointer;user-select:none}
+.check:last-child{border-bottom:0}
+.box{width:22px;height:22px;border-radius:7px;border:2px solid #b9c5c6;flex-shrink:0;display:grid;place-items:center;transition:.15s}
+.check.done .box{background:var(--teal);border-color:var(--teal)}
+.check.done .box:after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check.done span{color:var(--muted);text-decoration:line-through}
+.ring{display:flex;align-items:center;gap:14px}
+.ring svg{width:74px;height:74px;transform:rotate(-90deg)}
+.ring .pct{font-size:26px;font-weight:800}
+input,select.in,textarea{font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;background:#fbf9f4;color:var(--ink)}
+input:focus,textarea:focus{outline:none;border-color:var(--teal2)}
+.btn{font:inherit;font-weight:800;border:0;border-radius:12px;padding:11px 14px;background:var(--teal);color:#fff;cursor:pointer;font-size:14px}
+.btn.ghost{background:#e4f2f0;color:var(--teal)}
+.btn.coral{background:var(--coral)}
+.btn.sm{padding:7px 10px;font-size:12px;border-radius:10px}
+.row{display:flex;gap:8px;align-items:center}
+.conv .big{font-size:34px;font-weight:800;letter-spacing:-1px;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{background:#f3efe6;border:1px solid var(--line);border-radius:99px;padding:6px 11px;font-size:13px;font-weight:700;cursor:pointer}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.small{font-size:12px;color:var(--muted)}
+.exp{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.exp .x{background:none;border:0;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px}
+.sos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sos a{display:block;text-decoration:none;color:#fff;background:linear-gradient(135deg,#d24d2c,#b23a1e);border-radius:var(--r);padding:14px;font-weight:700}
+.sos a.main{grid-column:span 2;font-size:15px}
+.sos a b{display:block;font-size:30px;letter-spacing:-.5px}
+.sos a.alt{background:linear-gradient(135deg,#2f4b54,#1d343b)}
+.mono{font-family:"JetBrains Mono",monospace;font-size:13px;background:#f3efe6;border-radius:10px;padding:10px;word-break:break-all}
+.compass{width:150px;height:150px;border-radius:50%;margin:10px auto;background:radial-gradient(circle,#fff 55%,#e9f4f2 56%);border:2px solid var(--line);position:relative}
+.compass .n{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--coral)}
+.compass .arrow{position:absolute;inset:0;display:grid;place-items:center;transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+.compass .arrow svg{width:70px;height:70px}
+.plug{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:12px;background:#e4f2f0;color:var(--teal);font-weight:800;font-size:20px;margin-right:6px}
+.plug.need{background:#fbe3dc;color:#a8391d}
+.li{padding:6px 0 6px 18px;position:relative;font-size:14px;line-height:1.45}
+.li:before{content:"";position:absolute;left:4px;top:13px;width:6px;height:6px;border-radius:50%;background:var(--teal2)}
+.li.no:before{background:var(--coral)}
+.phr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.phr:last-child{border-bottom:0}
+.phr .en{font-size:13px;color:var(--muted);font-weight:600}
+.phr .lo{font-size:16px;font-weight:700}
+.phr .ro{font-size:12px;color:var(--teal);font-style:italic}
+.overlay{position:absolute;inset:0;background:var(--ink);color:#fff;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;z-index:20}
+.overlay.on{display:flex;animation:fade .2s}
+.overlay .huge{font-size:44px;font-weight:800;line-height:1.15;margin:16px 0}
+.overlay .sub{opacity:.75;font-size:16px}
+.overlay .close{position:absolute;top:22px;right:22px;background:rgba(255,255,255,.12);border:0;color:#fff;font:inherit;font-weight:800;border-radius:99px;padding:8px 14px;cursor:pointer}
+.overlay.light{background:#fff;color:var(--ink)}
+.overlay.light .close{background:#eee;color:var(--ink)}
+.vault-doc{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.vault-doc img{width:46px;height:46px;object-fit:cover;border-radius:8px;background:#eee}
+.vault-doc .ic{width:46px;height:46px;border-radius:8px;background:#e4f2f0;display:grid;place-items:center;font-weight:800;color:var(--teal);font-size:11px}
+.pin{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.pin span{width:14px;height:14px;border-radius:50%;border:2px solid var(--teal)}
+.pin span.f{background:var(--teal)}
+.keypad{display:grid;grid-template-columns:repeat(3,64px);gap:10px;justify-content:center}
+.keypad button{height:52px;border-radius:14px;border:1px solid var(--line);background:#fbf9f4;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.map-grid button{font:inherit;font-size:11px;font-weight:700;border:1px solid var(--line);background:#f3efe6;border-radius:10px;padding:8px 2px;cursor:pointer;line-height:1.2}
+.map-grid button .f{font-size:20px;display:block}
+.map-grid button.v{background:var(--teal);color:#fff;border-color:var(--teal)}
+.map-grid button.b{background:#fdf0d8;border-color:#f0d49a}
+.stop{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:12px;cursor:pointer;position:relative}
+.stop+.stop:before{content:"";position:absolute;left:19px;top:-8px;height:16px;border-left:2px dashed #c9d6d6}
+.stop.on{background:#e4f2f0}
+.stop .dot{width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--teal);color:var(--teal);display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0;position:relative;z-index:1}
+.stop.on .dot{background:var(--teal);color:#fff}
+.stop .sinfo{flex:1;min-width:0;font-size:14px}
+.stop .sbtn{display:flex;gap:2px}
+.stop .sbtn button{width:26px;height:26px;border:0;border-radius:8px;background:#f3efe6;font:inherit;font-weight:800;color:var(--muted);cursor:pointer}
+.stop .sbtn button:disabled{opacity:.3;cursor:default}
+.priv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.priv div{background:#e4f2f0;border-radius:14px;padding:10px 4px}
+.priv b{display:block;font-size:24px;color:var(--teal)}
+.priv span{font-size:11px;font-weight:700;color:var(--muted)}
+.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);max-width:88%;text-align:center;white-space:normal!important;border-radius:16px!important;background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:30;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.demo{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#8a5d00;background:#fdf0d8;border-radius:6px;padding:2px 6px;margin-left:6px;vertical-align:middle}
+details summary{cursor:pointer;font-weight:700;font-size:14px;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{margin-bottom:8px}
+</style><style>
+nav.tabs button{font-size:10px}
+nav.tabs button svg{width:21px;height:21px}
+.stop{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:12px;cursor:pointer;position:relative}
+.stop+.stop:before{content:"";position:absolute;left:19px;top:-8px;height:16px;border-left:2px dashed #c9d6d6}
+.stop.on{background:#e4f2f0}
+.stop .dot{width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--teal);color:var(--teal);display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0;position:relative;z-index:1}
+.stop.on .dot{background:var(--teal);color:#fff}
+.stop .sinfo{flex:1;min-width:0;font-size:14px}
+.ib{display:flex;gap:2px}
+.ib button{width:26px;height:26px;border:0;border-radius:8px;background:#f3efe6;font:inherit;font-weight:800;color:var(--muted);cursor:pointer}
+.ib button:disabled{opacity:.3;cursor:default}
+.edit{background:#fbf9f4;border:1px dashed var(--line);border-radius:12px;padding:10px;margin:4px 0 8px;display:grid;gap:8px}
+.bk{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.bk:last-child{border-bottom:0}
+.bk .ico{width:36px;height:36px;border-radius:10px;background:#e4f2f0;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.bk .body{flex:1;min-width:0;font-size:14px}
+.bk .ref{white-space:nowrap;font-family:"JetBrains Mono",monospace;font-size:12px;background:#f3efe6;border-radius:6px;padding:1px 6px}
+.flag-w{font-size:12px;font-weight:700;color:#8a5d00;background:#fdf0d8;border-radius:8px;padding:5px 8px;margin-top:5px}
+.flag-b{font-size:12px;font-weight:700;color:#a8391d;background:#fbe3dc;border-radius:8px;padding:5px 8px;margin-top:5px}
+.flag-g{font-size:12px;font-weight:700;color:var(--ok);background:#e2f3e8;border-radius:8px;padding:5px 8px;margin-top:5px}
+.seg{display:flex;background:#ece5d6;border-radius:12px;padding:3px}
+.seg button{flex:1;border:0;background:none;font:inherit;font-weight:800;font-size:13px;padding:8px;border-radius:10px;color:var(--muted);cursor:pointer}
+.seg button.on{background:#fff;color:var(--teal);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.brief{background:linear-gradient(160deg,#fff,#f1f8f6);}
+.datenav{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.datenav button{border:0;background:#e4f2f0;color:var(--teal);font:inherit;font-weight:800;border-radius:10px;width:34px;height:34px;cursor:pointer}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:14px;border-bottom:1px dashed var(--line)}
+.kv:last-child{border-bottom:0}
+.kv span:first-child{color:var(--muted);font-weight:600}
+.kv span:last-child{text-align:right;font-weight:700}
+.bar{height:8px;border-radius:99px;background:#ece5d6;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--teal);border-radius:99px}
+.bar i.over{background:var(--coral)}
+.timer{font-size:40px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.modal{position:absolute;inset:0;background:rgba(10,20,24,.55);display:none;align-items:flex-end;z-index:25}
+.modal.on{display:flex;animation:fade .2s}
+.sheet{background:#fff;width:100%;border-radius:24px 24px 0 0;padding:18px;max-height:88%;overflow-y:auto}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sheet .hd b{font-size:17px}
+.qr{display:flex;justify-content:center;padding:10px;background:#fff}
+.qr img,.qr canvas{width:200px!important;height:200px!important}
+.jr{padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.jr img{width:100%;border-radius:12px;margin-top:6px;max-height:180px;object-fit:cover}
+label.f{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini{font-size:12px;font-weight:700;color:var(--teal);background:none;border:0;cursor:pointer;padding:0;font-family:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <span class="tag">Interactive prototype · Android-style</span>
+    <h1>Pocketbook<br>Zero-tracking travel companion</h1>
+    <p>Covers the whole journey: planning, travelling, changes of plan and getting home safely. Everything stays on the device, with no account, cloud or analytics.</p>
+    <ul>
+      <li><b>Today</b> has the daily brief, next event, reminders, medication times, return countdown and the dual clock.</li>
+      <li><b>Plan</b> covers holiday or business mode, a route of up to 10 stops with "extend my stay", the Schengen 90/180 counter, the booking wallet with free-cancel countdowns, connection checks and Plan B, document expiry and entry rules, readiness, home prep, meetings and a QR itinerary.</li>
+      <li><b>Money</b> has the converter, group cost split, budget by stop and the trip wrap-up.</li>
+      <li><b>Safety</b> has SOS numbers, the check-in timer, Call Home, "I Am Here", Drop a Pin, the lost-item playbook, flight delay rights, the incident log and "I'm home".</li>
+      <li><b>Guide</b> covers power, driving, etiquette, water, medication rules, phrases, the menu decoder, the medical card and UK customs allowances.</li>
+      <li><b>Kit</b> has packing, the vault, the journal, the map and backup.</li>
+    </ul>
+    <p class="note">Use the ◀ ▶ arrows in the Today tab to step through the trip day by day. Rates, weather, GPS and the compass are simulated. Reminders show what the phone would schedule on-device. Photos stay in memory for this session only. Rules and allowances are summaries, so check official sources before you travel.</p>
+  </aside>
+
+  <div class="phone" id="phone">
+    <div class="status"><span id="sbTime">12:00</span><span class="air">✈ Offline-ready · 0 trackers</span></div>
+    <header class="top">
+      <div class="trip">
+        <div class="row">
+          <div style="min-width:0;flex:1">
+            <div style="font-size:11px;font-weight:700;opacity:.8;letter-spacing:1px" id="tripLbl">MY TRIP</div>
+            <select id="dest" aria-label="Current stop" style="max-width:100%"></select>
+          </div>
+          <div class="flag" id="flag"></div>
+        </div>
+        <div class="meta" id="tripMeta"></div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="view on" id="v-today">
+        <h2>Daily brief</h2>
+        <div class="card brief" id="brief"></div>
+        <div id="timerMini"></div>
+        <h2>Coming up</h2>
+        <div class="card" id="reminders"></div>
+        <h2>Medication times</h2>
+        <div class="card" id="meds"></div>
+        <h2>Going home</h2>
+        <div class="card" id="returnCard"></div>
+        <h2>Time</h2>
+        <div class="card">
+          <div class="grid2">
+            <div class="clock"><div class="l" id="locLbl">Local</div><div class="t" id="locT">--:--</div></div>
+            <div class="clock"><div class="l">Home · UK</div><div class="t" id="homeT">--:--</div></div>
+          </div>
+          <div style="text-align:center;margin-top:10px" id="callOk"></div>
+        </div>
+        <h2>Weather <span class="demo">cached sample</span></h2>
+        <div class="card"><div class="wx" id="wx"></div></div>
+      </section>
+
+      <section class="view" id="v-plan">
+        <h2>Trip type</h2>
+        <div class="card"><div class="seg" id="modeSeg"><button data-m="holiday">🏖 Holiday</button><button data-m="business">💼 Business</button></div><div class="small" id="modeNote" style="margin-top:8px"></div></div>
+        <h2>My route <span class="small" id="stopCount" style="text-transform:none;letter-spacing:0"></span></h2>
+        <div class="card"><div id="route"></div><div id="routeSum" style="margin-top:8px"></div><div id="addStopWrap"></div></div>
+        <h2>Schengen 90/180</h2>
+        <div class="card" id="schengen"></div>
+        <h2>Bookings wallet</h2>
+        <div class="card" id="wallet"></div>
+        <h2>Connections check</h2>
+        <div class="card" id="connections"></div>
+        <div id="meetingsWrap"></div>
+        <h2>Documents & entry</h2>
+        <div class="card" id="docs"></div>
+        <h2>Ready to go?</h2>
+        <div class="card">
+          <div class="ring">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.9" fill="none" stroke="#e9dfcc" stroke-width="3.5"/><circle id="ringArc" cx="18" cy="18" r="15.9" fill="none" stroke="#0f6e6e" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 100"/></svg>
+            <div><div class="pct" id="readyPct">0%</div><div class="small" id="readyTxt"></div></div>
+          </div>
+          <div id="readyList" style="margin-top:8px"></div>
+        </div>
+        <h2>Home before you go</h2>
+        <div class="card" id="homeList"></div>
+        <h2>Share the plan</h2>
+        <div class="card"><div class="small">Give family a copy of your itinerary with no account and no cloud. They scan the QR code or you paste the text.</div><button class="btn" id="shareBtn" style="width:100%;margin-top:8px">Create itinerary QR</button></div>
+      </section>
+
+      <section class="view" id="v-money">
+        <h2>Converter <span class="demo">cached rates</span></h2>
+        <div class="card conv">
+          <div class="row"><input id="amt" type="number" inputmode="decimal" value="20" aria-label="Amount"><button class="btn ghost" id="swap" title="Swap direction">⇄</button></div>
+          <div class="small" id="convDir" style="margin-top:8px"></div>
+          <div class="big" id="convOut">—</div>
+          <div class="small" id="rateLine"></div>
+          <div class="chips" id="quick"></div>
+        </div>
+        <h2>Travellers</h2>
+        <div class="card" id="travellers"></div>
+        <h2>Spending</h2>
+        <div class="card" id="spend"></div>
+        <h2>Settle up</h2>
+        <div class="card" id="settle"></div>
+        <h2>Budget by stop</h2>
+        <div class="card" id="budget"></div>
+        <h2>Trip wrap-up</h2>
+        <div class="card" id="wrap"></div>
+      </section>
+
+      <section class="view" id="v-safety">
+        <h2>Emergency</h2>
+        <div class="sos" id="sos"></div>
+        <div class="small" style="margin:8px 2px">Tap to dial. Numbers are stored offline in the country pack.</div>
+        <h2>Check-in timer</h2>
+        <div class="card" id="timer"></div>
+        <h2>Call home</h2>
+        <div class="card">
+          <input id="homeNum" placeholder="UK number e.g. 07700 900123">
+          <div class="mono" id="dialFmt" style="margin-top:8px"></div>
+          <div id="callWarn" style="margin-top:8px"></div>
+          <a class="btn" id="dialBtn" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="#">Call home</a>
+        </div>
+        <h2>"I am here" card</h2>
+        <div class="card">
+          <button class="btn coral" id="hereBtn" style="width:100%">📍 Get my location now</button>
+          <div class="small" style="margin-top:6px">One-off GPS fix only. No background tracking. <span class="demo">simulated</span></div>
+          <div id="hereOut" style="display:none;margin-top:10px">
+            <div class="mono" id="hereTxt"></div>
+            <div class="row" style="margin-top:8px;flex-wrap:wrap"><button class="btn sm" id="hereCopy">Copy message</button><button class="btn sm ghost" id="hereShow">Show to driver</button><button class="btn sm ghost" id="hereQR">QR code</button></div>
+          </div>
+        </div>
+        <h2>Drop a pin</h2>
+        <div class="card">
+          <div class="chips" id="pinType"><span class="chip on" data-t="Hotel">🏨 Hotel</span><span class="chip" data-t="Car">🚗 Parked car</span><span class="chip" data-t="Meeting point">📌 Meeting point</span></div>
+          <div class="row" style="margin-top:10px"><button class="btn" id="pinSet" style="flex:1">Save pin here</button><button class="btn ghost" id="pinMove" style="flex:1">I've walked on</button></div>
+          <div id="pinOut" class="small" style="margin-top:8px"></div>
+          <div class="compass" id="compass" style="display:none"><span class="n">N</span><div class="arrow" id="arrow"><svg viewBox="0 0 24 24"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="#0f6e6e"/></svg></div></div>
+          <div style="text-align:center;font-weight:800;font-size:20px" id="pinDist"></div>
+        </div>
+        <h2>Lost something?</h2>
+        <div class="card" id="lost"></div>
+        <h2>Flight delayed or cancelled?</h2>
+        <div class="card" id="delay"></div>
+        <h2>Incident log</h2>
+        <div class="card" id="incidents"></div>
+        <h2>Home safe</h2>
+        <div class="card"><div class="small">One tap when you walk through the door.</div><button class="btn" id="homeSafe" style="width:100%;margin-top:8px">🏠 I'm home safe</button></div>
+      </section>
+
+      <section class="view" id="v-guide">
+        <h2>Power</h2><div class="card" id="power"></div>
+        <h2>Driving</h2><div class="card" id="drive"></div>
+        <h2>Tipping & etiquette</h2><div class="card" id="tips"></div>
+        <h2>Water & safety</h2><div class="card" id="water"></div>
+        <h2>Medicines</h2><div class="card" id="medRules"></div>
+        <h2>Phrase cards</h2><div class="card" id="phrases"></div>
+        <h2>Menu decoder</h2>
+        <div class="card"><input id="menuQ" placeholder="Type a word from the menu…"><div id="menuList" style="margin-top:6px"></div></div>
+        <h2>Medical card</h2>
+        <div class="card">
+          <input id="medTxt" placeholder="e.g. Penicillin allergy">
+          <button class="btn ghost" id="medShow" style="width:100%;margin-top:8px">Show in large text</button>
+          <div class="small" style="margin-top:6px">Kept on this device only. Shown with "I need a doctor" in the local language.</div>
+        </div>
+        <h2>Coming back to the UK</h2><div class="card" id="customs"></div>
+      </section>
+
+      <section class="view" id="v-kit">
+        <h2>Packing list</h2>
+        <div class="card"><div class="chips" id="packTpl"></div><div id="packList" style="margin-top:8px"></div><button class="btn ghost sm" id="packReset" style="margin-top:8px">Reset for next trip</button></div>
+        <h2>Document vault</h2><div class="card" id="vault"></div>
+        <h2>Trip journal</h2><div class="card" id="journal"></div>
+        <h2>My travel map</h2>
+        <div class="card"><div class="small" style="margin-bottom:8px">Tap once for <b>visited</b>, twice for <b>bucket list</b>, again to clear.</div><div class="map-grid" id="mapGrid"></div><div class="small" id="mapStats" style="margin-top:8px"></div></div>
+        <h2>Privacy & backup</h2>
+        <div class="card">
+          <div class="priv"><div><b>0</b><span>accounts</span></div><div><b>0</b><span>trackers</span></div><div><b>100%</b><span>on device</span></div></div>
+          <button class="btn" id="exportBtn" style="width:100%;margin-top:12px">Export my data (.json)</button>
+          <button class="btn ghost" id="resetDemo" style="width:100%;margin-top:8px">Reset demo data</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabs" id="tabs">
+      <button class="on" data-v="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</button>
+      <button data-v="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Plan</button>
+      <button data-v="money"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>Money</button>
+      <button data-v="safety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Safety</button>
+      <button data-v="guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h7v14H4zM13 5h7v14h-7z"/></svg>Guide</button>
+      <button data-v="kit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3"/></svg>Kit</button>
+    </nav>
+
+    <div class="overlay" id="ov"><button class="close" id="ovClose">Close ✕</button><div class="sub" id="ovTop"></div><div class="huge" id="ovBig"></div><div class="sub" id="ovSub"></div></div>
+    <div class="modal" id="modal"><div class="sheet"><div class="hd"><b id="mTitle"></b><button class="btn sm ghost" id="mClose">Close</button></div><div id="mBody"></div></div></div>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+<script>
+(function(){
+const HOME={name:'United Kingdom',cc:'44',tz:'Europe/London',cur:'GBP',sym:'£',plugs:['G'],volt:230};
+const C={
+ GR:{name:'Greece',city:'Chania, Crete',flag:'🇬🇷',tz:'Europe/Athens',cur:'EUR',sym:'€',rate:1.15,plugs:['C','F'],volt:230,hz:50,exit:'00',cc:'30',lat:35.5138,lon:24.0180,eu:true,
+  sos:[['All emergencies','112',1],['Police','100'],['Ambulance','166'],['Tourist police','1571']],
+  tips:['Restaurants: 5–10% for good service, left in cash','Taxis: round up to the nearest euro','Hotel porters: €1–2 per bag'],
+  etiq:['Dress modestly (shoulders and knees covered) in churches and monasteries','Lunch runs late (2–4pm) and dinner rarely starts before 9pm'],
+  no:['Avoid the open-palm "moutza" gesture. It is offensive.'],
+  water:'Tap water is generally safe in cities. On many islands, locals drink bottled water, so check with your host.',
+  scams:['Unmetered taxis at ports and airports: agree the fare or insist on the meter','Overpriced drinks at bars when invited in by a friendly stranger'],
+  lang:'Greek',ph:[['Hello','Γειά σας','Yiá sas'],['Thank you','Ευχαριστώ','Efcharistó'],['Please','Παρακαλώ','Parakaló'],['How much is it?','Πόσο κάνει;','Póso káni?'],['The bill, please','Τον λογαριασμό, παρακαλώ','Ton logariasmó, parakaló'],['Where is the toilet?','Πού είναι η τουαλέτα;','Poú íne i toualéta?'],['I need a doctor','Χρειάζομαι γιατρό','Chriázome yatró'],['Help!','Βοήθεια!','Voíthia!']],
+  menu:[['Χωριάτικη','Horiatiki','Greek salad: tomato, cucumber, onion, olives, feta'],['Ντάκος','Dakos','Cretan barley rusk with tomato and mizithra cheese'],['Σουβλάκι','Souvlaki','Grilled meat skewers'],['Μουσακάς','Moussaka','Baked aubergine, mince and béchamel'],['Χταπόδι','Htapodi','Octopus'],['Καλαμαράκια','Kalamarakia','Fried squid'],['Τζατζίκι','Tzatziki','Yoghurt, cucumber and garlic dip'],['Γεμιστά','Gemista','Stuffed tomatoes and peppers'],['Ρακί','Raki / Tsikoudia','Strong Cretan grape spirit'],['Κλέφτικο','Kleftiko','Slow-cooked lamb']],
+  wx:[[22,'☀️'],[21,'⛅'],[20,'🌦'],[19,'⛅'],[21,'☀️'],[22,'☀️'],[20,'⛅']]},
+ ES:{name:'Spain',city:'Barcelona',flag:'🇪🇸',tz:'Europe/Madrid',cur:'EUR',sym:'€',rate:1.15,plugs:['C','F'],volt:230,hz:50,exit:'00',cc:'34',lat:41.3874,lon:2.1686,eu:true,
+  sos:[['All emergencies','112',1],['National police','091'],['Medical emergency','061'],['Local police','092']],
+  tips:['Not obligatory. Rounding up or 5–10% for good service is appreciated','Bars: leave small change','Taxis: round up'],
+  etiq:['Lunch around 2pm and dinner from 9pm onwards','A greeting on entering small shops is expected'],
+  no:['Avoid assuming everyone speaks Spanish in Catalonia. Catalan is widely used.'],
+  water:'Tap water is safe to drink. In Barcelona the taste can be strong, so many people prefer filtered or bottled.',
+  scams:['Pickpocketing on Las Ramblas and the metro','Distraction tricks such as a "bird dropping" on your clothes, or petition clipboards'],
+  lang:'Spanish',ph:[['Hello','Hola','OH-la'],['Thank you','Gracias','GRA-thee-as'],['Please','Por favor','por fa-BOR'],['How much is it?','¿Cuánto cuesta?','KWAN-to KWES-ta?'],['The bill, please','La cuenta, por favor','la KWEN-ta, por fa-BOR'],['Where is the toilet?','¿Dónde está el baño?','DON-de es-TA el BA-nyo?'],['I need a doctor','Necesito un médico','ne-the-SEE-to oon ME-dee-ko'],['Help!','¡Socorro!','so-KO-rro!']],
+  menu:[['Gambas al ajillo','','Prawns in garlic and oil'],['Pulpo a la gallega','','Galician-style octopus with paprika'],['Croquetas','','Fried béchamel croquettes'],['Patatas bravas','','Fried potatoes with spicy sauce'],['Jamón ibérico','','Cured Iberian ham'],['Pan con tomate','','Bread rubbed with tomato and oil'],['Cordero','','Lamb'],['Cerdo','','Pork'],['Ternera','','Beef / veal'],['Pescado','','Fish']],
+  wx:[[17,'☀️'],[16,'⛅'],[15,'🌧'],[16,'⛅'],[17,'☀️'],[18,'☀️'],[17,'⛅']]},
+ US:{name:'United States',city:'New York',flag:'🇺🇸',tz:'America/New_York',cur:'USD',sym:'$',rate:1.32,plugs:['A','B'],volt:120,hz:60,exit:'011',cc:'1',lat:40.7128,lon:-74.0060,
+  sos:[['All emergencies','911',1],['Non-emergency (NYC)','311']],
+  tips:['Restaurants: 18–22% expected on the pre-tax bill','Bars: $1–2 per drink','Taxis and rideshare: 15–20%','Prices are shown before sales tax'],
+  etiq:['Queue properly and keep a little personal space','Service staff rely on tips as part of their wages'],
+  no:['Not tipping is seen as a strong complaint, not a neutral choice'],
+  water:'Tap water is safe to drink across almost all of the country.',
+  scams:['Fake "charity" or CD sellers in Times Square','Costumed characters asking for money after a photo'],
+  lang:'English',ph:[],
+  menu:[['Entrée','','Main course (not a starter)'],['Appetizer','','Starter'],['Check','','The bill'],['Biscuit','','Scone-like bread roll'],['Grits','','Ground corn porridge'],['Side','','Side dish'],['Sunny side up','','Fried egg, not flipped'],['Over easy','','Fried egg, flipped, runny yolk'],['Soda','','Fizzy drink'],['Fries','','Chips']],
+  wx:[[9,'⛅'],[7,'🌧'],[6,'☁️'],[8,'⛅'],[10,'☀️'],[11,'☀️'],[8,'🌧']]},
+ JP:{name:'Japan',city:'Tokyo',flag:'🇯🇵',tz:'Asia/Tokyo',cur:'JPY',sym:'¥',rate:200,plugs:['A','B'],volt:100,hz:'50/60',exit:'010',cc:'81',lat:35.6762,lon:139.6503,
+  sos:[['Police','110',1],['Ambulance / Fire','119',1],['Japan Visitor Hotline','050-3816-2787']],
+  tips:['Tipping is not customary and can cause confusion','Service is included. Simply say thank you'],
+  etiq:['Remove shoes where you see a step up or slippers at the entrance','Stand on the left of escalators in Tokyo','Keep phone calls off trains'],
+  no:['Do not stick chopsticks upright in rice','Avoid eating while walking in busy areas'],
+  water:'Tap water is safe to drink everywhere.',
+  scams:['Touts in Kabukicho and Roppongi steering you to bars with inflated bills'],
+  lang:'Japanese',ph:[['Hello','こんにちは','Konnichiwa'],['Thank you','ありがとうございます','Arigatō gozaimasu'],['Please','お願いします','Onegaishimasu'],['How much is it?','いくらですか？','Ikura desu ka?'],['The bill, please','お会計お願いします','Okaikei onegaishimasu'],['Where is the toilet?','トイレはどこですか？','Toire wa doko desu ka?'],['I need a doctor','医者が必要です','Isha ga hitsuyō desu'],['Help!','助けて！','Tasukete!']],
+  menu:[['鶏','Tori','Chicken'],['豚','Buta','Pork'],['牛','Gyū','Beef'],['魚','Sakana','Fish'],['海老','Ebi','Prawn'],['卵','Tamago','Egg'],['定食','Teishoku','Set meal'],['丼','Don','Rice bowl'],['刺身','Sashimi','Sliced raw fish'],['お冷','Ohiya','Free iced water']],
+  wx:[[14,'☀️'],[13,'⛅'],[12,'☁️'],[14,'☀️'],[15,'☀️'],[13,'🌧'],[12,'⛅']]},
+ TH:{name:'Thailand',city:'Bangkok',flag:'🇹🇭',tz:'Asia/Bangkok',cur:'THB',sym:'฿',rate:44,plugs:['A','B','C','O'],volt:230,hz:50,exit:'001',cc:'66',lat:13.7563,lon:100.5018,
+  sos:[['Tourist police','1155',1],['Police','191'],['Ambulance','1669'],['Fire','199']],
+  tips:['Restaurants: round up or 10% where no service charge is added','Massage: ฿50–100','Taxis: round up'],
+  etiq:['Cover shoulders and knees at temples and remove shoes','Never criticise the monarchy. It is a serious criminal offence','The head is sacred, so avoid touching anyone\'s head'],
+  no:['Do not point your feet at people or Buddha images'],
+  water:'Do not drink tap water. Use bottled or filtered water, and check that ice is made commercially (it usually has a hole in the middle).',
+  scams:['"The Grand Palace is closed today" followed by a tuk-tuk to a gem shop','Jet-ski damage claims at beach resorts'],
+  lang:'Thai',ph:[['Hello','สวัสดีครับ/ค่ะ','Sawasdee khrap/kha'],['Thank you','ขอบคุณครับ/ค่ะ','Khop khun khrap/kha'],['How much is it?','เท่าไหร่','Tao rai?'],['The bill, please','เช็คบิล','Check bin'],['Where is the toilet?','ห้องน้ำอยู่ที่ไหน','Hong nam yoo tee nai?'],['I need a doctor','ต้องการหมอ','Tong-gan mor'],['Not spicy','ไม่เผ็ด','Mai phet'],['Help!','ช่วยด้วย','Chuay duay!']],
+  menu:[['ผัดไทย','Pad thai','Stir-fried rice noodles'],['ต้มยำ','Tom yum','Hot and sour soup'],['แกงเขียวหวาน','Gaeng keow wan','Green curry'],['ข้าวผัด','Khao pad','Fried rice'],['ไก่','Gai','Chicken'],['หมู','Moo','Pork'],['กุ้ง','Goong','Prawn'],['ส้มตำ','Som tam','Green papaya salad (often very spicy)'],['เผ็ด','Phet','Spicy'],['ข้าวเหนียว','Khao niao','Sticky rice']],
+  wx:[[33,'☀️'],[32,'⛅'],[31,'⛈'],[33,'☀️'],[32,'⛅'],[31,'⛈'],[33,'☀️']]},
+ IT:{name:'Italy',city:'Rome',flag:'🇮🇹',tz:'Europe/Rome',cur:'EUR',sym:'€',rate:1.15,plugs:['C','F','L'],volt:230,hz:50,exit:'00',cc:'39',lat:41.9028,lon:12.4964,eu:true,
+  sos:[['All emergencies','112',1],['State police','113'],['Ambulance','118'],['Fire','115']],
+  tips:['Not expected. A "coperto" (cover charge) is often already on the bill','Round up or leave small change for good service','Coffee at the bar is cheaper than sitting at a table'],
+  etiq:['Cover shoulders and knees in churches, including St Peter\'s','Cappuccino is a morning drink. Order "un caffè" after meals'],
+  no:['Sitting on the Spanish Steps or paddling in fountains can bring a fine'],
+  water:'Tap water is safe to drink. Rome\'s free "nasoni" street fountains are drinkable.',
+  scams:['"Free" friendship bracelets tied on your wrist, then a demand for money','Costumed gladiators charging for photos'],
+  lang:'Italian',ph:[['Hello','Buongiorno','bwon-JOR-no'],['Thank you','Grazie','GRAT-see-eh'],['Please','Per favore','per fa-VO-reh'],['How much is it?','Quanto costa?','KWAN-to KOS-ta?'],['The bill, please','Il conto, per favore','eel KON-to, per fa-VO-reh'],['Where is the toilet?','Dov\'è il bagno?','do-VEH eel BAN-yo?'],['I need a doctor','Ho bisogno di un medico','oh bee-ZON-yo dee oon MEH-dee-ko'],['Help!','Aiuto!','ah-YOO-to!']],
+  menu:[['Coperto','','Cover charge per person'],['Antipasto','','Starter'],['Primo','','First course, usually pasta or risotto'],['Secondo','','Main course of meat or fish'],['Contorno','','Side dish, ordered separately'],['Maiale','','Pork'],['Manzo','','Beef'],['Vitello','','Veal'],['Frutti di mare','','Seafood'],['Acqua frizzante','','Sparkling water']],
+  wx:[[16,'⛅'],[15,'🌧'],[14,'☁️'],[16,'☀️'],[17,'☀️'],[15,'⛅'],[14,'🌧']]},
+ FR:{name:'France',city:'Paris',flag:'🇫🇷',tz:'Europe/Paris',cur:'EUR',sym:'€',rate:1.15,plugs:['C','E'],volt:230,hz:50,exit:'00',cc:'33',lat:48.8566,lon:2.3522,eu:true,
+  sos:[['All emergencies','112',1],['Medical (SAMU)','15'],['Police','17'],['Fire','18']],
+  tips:['Service is included by law ("service compris")','Leave small change or round up for good service'],
+  etiq:['Always say "Bonjour" when entering a shop or café','Dinner usually starts from 7.30–8pm'],
+  no:['Don\'t call a waiter "garçon". Use "Monsieur" or "Madame"'],
+  water:'Tap water is safe. Ask for "une carafe d\'eau" and it is free with a meal.',
+  scams:['The "found a gold ring" trick','String bracelet sellers around Sacré-Cœur','Fake petitions near major sights'],
+  lang:'French',ph:[['Hello','Bonjour','bon-ZHOOR'],['Thank you','Merci','mair-SEE'],['Please','S\'il vous plaît','seel voo PLAY'],['How much is it?','C\'est combien ?','say kom-BYAN?'],['The bill, please','L\'addition, s\'il vous plaît','la-dee-SYON, seel voo PLAY'],['Where is the toilet?','Où sont les toilettes ?','oo son lay twa-LET?'],['I need a doctor','J\'ai besoin d\'un médecin','zhay be-ZWAN dun med-SAN'],['Help!','Au secours !','oh se-KOOR!']],
+  menu:[['Entrée','','Starter (not the main course)'],['Plat du jour','','Dish of the day'],['Canard','','Duck'],['Agneau','','Lamb'],['Porc','','Pork'],['Bœuf','','Beef'],['Veau','','Veal'],['Saignant','','Rare'],['À point','','Medium'],['Bien cuit','','Well done']],
+  wx:[[10,'☁️'],[9,'🌧'],[8,'🌧'],[10,'⛅'],[11,'⛅'],[9,'☁️'],[8,'🌧']]}
+};
+const WORLD=[['🇬🇷','Greece'],['🇪🇸','Spain'],['🇮🇹','Italy'],['🇫🇷','France'],['🇵🇹','Portugal'],['🇺🇸','USA'],['🇯🇵','Japan'],['🇹🇭','Thailand'],['🇩🇪','Germany'],['🇳🇱','Netherlands'],['🇹🇷','Turkey'],['🇦🇪','UAE'],['🇲🇦','Morocco'],['🇮🇸','Iceland'],['🇦🇺','Australia'],['🇲🇽','Mexico']];
+const PACK={
+ Beach:['Passport','Travel insurance docs','Plug adapter','Phone charger & power bank','Sunscreen SPF 30+','Sunglasses','Swimwear','Flip-flops','Hat','Basic first-aid kit','Prescription meds'],
+ City:['Passport','Travel insurance docs','Plug adapter','Phone charger & power bank','Comfortable walking shoes','Light rain jacket','Day bag','Copy of bookings','Prescription meds'],
+ Winter:['Passport','Travel insurance docs','Plug adapter','Thermal layers','Waterproof jacket','Gloves & hat','Lip balm','Phone charger & power bank','Prescription meds']
+};
+
+const X={
+ GR:{sch:1,pm:3,drive:{side:'Right',lim:'50 / 90 / 130 km/h (town / open road / motorway)',kit:'Warning triangle, first-aid kit and fire extinguisher',notes:['Motorway tolls are paid at booths by cash or card','A UK photocard licence is accepted. No IDP needed']},
+  meds:'Carry medicines in their original packaging with a copy of the prescription. Strong painkillers and sleeping tablets should come with a doctor\'s letter.'},
+ ES:{sch:1,pm:3,drive:{side:'Right',lim:'50 / 90 / 120 km/h',kit:'V-16 connected warning beacon (replaced triangles from 2026) and reflective vests',notes:['Barcelona, Madrid and other cities have low-emission zones (ZBE)','A UK photocard licence is accepted']},
+  meds:'Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor\'s letter.'},
+ IT:{sch:1,pm:3,drive:{side:'Right',lim:'50 / 90 / 130 km/h (110 in rain)',kit:'Warning triangle and reflective vest',notes:['ZTL limited-traffic zones in historic centres: camera fines can arrive months later','Motorway (autostrada) tolls apply','A UK photocard licence is accepted']},
+  meds:'Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor\'s letter.'},
+ FR:{sch:1,pm:3,drive:{side:'Right',lim:'50 / 80 / 130 km/h (110 in rain)',kit:'Reflective vest within reach and a warning triangle',notes:['A Crit\'Air emissions sticker is needed in Paris, Lyon and other low-emission zones','Péage tolls apply on most motorways','A UK photocard licence is accepted']},
+  meds:'Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor\'s letter.'},
+ US:{sch:0,pm:0,idp:'Recommended',drive:{side:'Right',lim:'25–35 mph in town, 55–75 mph on highways (varies by state)',kit:'Nothing extra required. Rental cars include the essentials',notes:['Turning right on a red light is usually allowed after a full stop, but not in New York City','Never pass a school bus with its stop sign out','Most rental firms accept a UK licence. An IDP is recommended']},
+  meds:'Keep medicines in their original labelled containers with a copy of the prescription. Some medicines sold over the counter in the UK are prescription-only in the US.',
+  entry:['ESTA approved before you fly (apply only on the official US government site)','Passport valid for your whole stay']},
+ JP:{sch:0,pm:0,idp:'Required (1949 IDP)',drive:{side:'Left',lim:'40–60 km/h in town, 100–120 km/h on expressways',kit:'Nothing extra required',notes:['You must carry a 1949 International Driving Permit with your UK licence','Rent an ETC card with the car to pay expressway tolls','Zero tolerance on drink-driving. Passengers who knowingly ride with a drinking driver are also liable']},
+  meds:'Strict rules. Some cold and allergy medicines containing pseudoephedrine, and codeine above set levels, are banned. Bringing more than one month\'s supply of prescription medicine needs an import certificate (Yakkan Shoumei). Check the Japanese embassy guidance before you pack.',
+  entry:['UK visitors can stay up to 90 days without a visa','Visit Japan Web QR codes speed up immigration and customs']},
+ TH:{sch:0,pm:6,idp:'Required (1949 IDP)',drive:{side:'Left',lim:'80–90 km/h on highways, 120 km/h on motorways',kit:'Nothing extra required',notes:['You need a 1949 IDP. Insurance may not pay out without it','Helmets are compulsory on scooters. Travel insurance often excludes motorbikes unless you hold a full motorcycle licence']},
+  meds:'Some medicines, such as strong painkillers and some ADHD and sleep medication, need a Thai FDA permit. Carry your prescription and keep medicines in their original packs.',
+  entry:['Short tourist stays are visa-exempt for UK visitors, but check the current length','Complete the Thailand Digital Arrival Card (TDAC) online before you arrive','Passport valid for 6 months on arrival']}
+};
+const SCH_ENTRY=['EU Entry/Exit System: fingerprints and photo are taken at your first Schengen entry','ETIAS travel authorisation: required once launched, so check the current status before you fly'];
+const MAX_STOPS=10;
+const HOME_TASKS=['Pet care or sitter arranged','Plants watered or on a timer','Heating on frost setting','Post held or neighbour collecting','Bin days covered','Lights on timers','Valuables locked away','Spare key with someone you trust','Fridge cleared of perishables','Itinerary shared with family'];
+const ICON={flight:'✈️',ferry:'⛴',train:'🚆',bus:'🚌',hotel:'🏨',car:'🚗',event:'🎟'};
+const TRANSPORT=['flight','ferry','train','bus'];
+PACK.Business=['Passport','Laptop & charger','Plug adapter','Business cards','Presentation saved offline','Smart outfit','Comfortable shoes','Travel insurance docs','Prescription meds'];
+
+function seed(){return{v:3,mode:'holiday',
+ stops:[{id:'s1',c:'GR',city:'Chania',from:'2027-05-02',to:'2027-05-06',budget:150},{id:'s2',c:'GR',city:'Athens',from:'2027-05-07',to:'2027-05-09',budget:130},{id:'s3',c:'IT',city:'Rome',from:'2027-05-09',to:'2027-05-12',budget:160}],
+ active:0,sim:'2027-05-02',
+ bookings:[
+  {id:'b1',type:'flight',title:'London Gatwick → Chania',ref:'K7Q2PL',sid:'home',start:'2027-05-02T07:10',end:'2027-05-02T12:50',cancel:'',addr:'Gatwick North Terminal',planB:'Fly to Heraklion and take the KTEL bus to Chania (about 2h45)'},
+  {id:'b2',type:'hotel',title:'Hotel, Chania Old Town',ref:'HX-48213',sid:'s1',start:'2027-05-02T15:00',end:'2027-05-06T11:00',cancel:'2027-04-25T23:59',addr:'Old Venetian Harbour, Chania',planB:''},
+  {id:'b3',type:'ferry',title:'Overnight ferry Souda → Piraeus',ref:'FR-77310',sid:'s1',start:'2027-05-06T21:00',end:'2027-05-07T06:00',cancel:'2027-05-04T21:00',addr:'Souda port, Chania',planB:'Morning flight Chania → Athens (about 50 min)'},
+  {id:'b4',type:'hotel',title:'Hotel near Syntagma',ref:'AT-5520',sid:'s2',start:'2027-05-07T14:00',end:'2027-05-09T11:00',cancel:'2027-05-05T18:00',addr:'Syntagma Square, Athens',planB:''},
+  {id:'b5',type:'flight',title:'Athens → Rome Fiumicino',ref:'Q9M4TT',sid:'s2',start:'2027-05-09T12:30',end:'2027-05-09T13:40',cancel:'',addr:'Athens International Airport',planB:'Later flight with another airline, or ferry Patras → Bari plus train'},
+  {id:'b6',type:'hotel',title:'Apartment in Trastevere',ref:'RM-90114',sid:'s3',start:'2027-05-09T15:00',end:'2027-05-12T10:00',cancel:'2027-05-02T23:59',addr:'Trastevere, Rome',planB:''},
+  {id:'b7',type:'flight',title:'Rome Fiumicino → London Gatwick',ref:'Z2KD8R',sid:'s3',start:'2027-05-12T16:20',end:'2027-05-12T18:00',cancel:'',addr:'Fiumicino Terminal 1',planB:''}],
+ meetings:[],meds:[{n:'Antihistamine',t:'08:00',m:'local'}],
+ docs:{pass:'2027-07-20',issued:'2018-02-10',lic:'2031-04-01',ins:'2027-05-11'},schPrior:0,
+ travellers:['Me','Alex'],
+ exp:[{d:'Taverna dinner',a:64,c:'GR',sid:'s1',by:'Me',cat:'Food'},{d:'Ferry cabin upgrade',a:40,c:'GR',sid:'s1',by:'Alex',cat:'Transport'}],
+ leftover:{},travelMin:45,ready:{pack:true},home:{},homeNum:'',pin:null,me:null,packTpl:'Beach',packed:{},map:{},med:'',vaultPin:null,
+ incidents:[],journal:[],timer:null,cards:[{n:'',p:''},{n:'',p:''}],toLocal:true};}
+let S=seed();
+try{const s=JSON.parse(localStorage.getItem('pocketbook3')||'null');if(s&&s.v===3)S=Object.assign(S,s);}catch(e){}
+function save(){try{localStorage.setItem('pocketbook3',JSON.stringify(S));}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,8);
+let editStop=-1;const photos={};
+
+// ---------- time helpers ----------
+function addDays(ds,n){const d=new Date(ds+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);}
+function dBetween(a,b){return Math.round((Date.parse(b+'T00:00:00Z')-Date.parse(a+'T00:00:00Z'))/864e5);}
+function shiftDT(s,n){if(!s)return s;const p=s.split('T');return addDays(p[0],n)+(p[1]?'T'+p[1]:'');}
+function tzOff(tz,ms){const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(ms)).reduce((a,x)=>(a[x.type]=x.value,a),{});return Date.UTC(+p.year,p.month-1,+p.day,(+p.hour)%24,+p.minute,+p.second)-ms;}
+function z2u(str,tz){const[d,t]=str.split('T');const[y,m,dd]=d.split('-').map(Number);const[h,mi]=(t||'00:00').split(':').map(Number);const g=Date.UTC(y,m-1,dd,h,mi);const o=tzOff(tz,g);let r=g-o;const o2=tzOff(tz,r);if(o2!==o)r=g-o2;return r;}
+function wall(ms,tz,o){return new Intl.DateTimeFormat('en-GB',Object.assign({timeZone:tz},o||{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})).format(new Date(ms));}
+const hm=(ms,tz)=>wall(ms,tz,{hour:'2-digit',minute:'2-digit'});
+const dayOf=(ms,tz)=>new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ms));
+const fmtDate=d=>d?new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}):'';
+function NOW(){if(!S.sim)return Date.now();const tz=D().tz;return z2u(S.sim+'T'+hm(Date.now(),tz),tz);}
+function rel(ms){const d=ms-NOW(),m=Math.round(Math.abs(d)/6e4);let s;if(m<1)return'now';if(m<60)s=m+' min';else if(m<2880)s=Math.floor(m/60)+'h'+(m%60?' '+(m%60)+'m':'');else s=Math.round(m/1440)+' days';return d>=0?'in '+s:s+' ago';}
+
+// ---------- stops ----------
+const sIdx=id=>S.stops.findIndex(s=>s.id===id);
+const sName=s=>s?(s.city||C[s.c].city):'Home';
+function stopData(st){return Object.assign({},C[st.c],X[st.c],{code:st.c,id:st.id,city:sName(st)+', '+C[st.c].name});}
+const D=()=>stopData(S.stops[S.active]);
+const stopTz=i=>(i<0||i>=S.stops.length)?HOME.tz:C[S.stops[i].c].tz;
+const tripCountries=()=>[...new Set(S.stops.map(s=>s.c))];
+const tripPlugs=()=>[...new Set(tripCountries().flatMap(c=>C[c].plugs))].sort();
+const tripStart=()=>S.stops.reduce((a,s)=>!a||(s.from&&s.from<a)?s.from:a,'');
+const tripEnd=()=>S.stops.reduce((a,s)=>!a||(s.to&&s.to>a)?s.to:a,'');
+function stopForDate(d){for(let i=0;i<S.stops.length;i++){const s=S.stops[i];if(s.from&&s.to&&d>=s.from&&d<s.to)return i;}const i=S.stops.findIndex(s=>s.to===d);return i;}
+// bookings
+const isT=b=>TRANSPORT.includes(b.type);
+const bSi=b=>b.sid==='home'?-1:sIdx(b.sid);
+const bStart=b=>z2u(b.start,stopTz(bSi(b)));
+const bEnd=b=>b.end?z2u(b.end,isT(b)?stopTz(bSi(b)+1):stopTz(bSi(b))):bStart(b);
+const bTzS=b=>stopTz(bSi(b));
+const bTzE=b=>isT(b)?stopTz(bSi(b)+1):stopTz(bSi(b));
+const sorted=()=>S.bookings.slice().sort((a,b)=>bStart(a)-bStart(b));
+const returnBk=()=>{const last=S.stops[S.stops.length-1];return sorted().filter(b=>isT(b)&&last&&b.sid===last.id).pop();};
+
+// ---------- ui helpers ----------
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000);}
+async function copy(txt){try{await navigator.clipboard.writeText(txt);toast('Copied');}catch(e){toast('Copy blocked here. Select the text and copy it manually');}}
+function overlay(top,big,sub,light){$('ovTop').textContent=top;$('ovBig').textContent=big;$('ovSub').textContent=sub||'';$('ov').classList.toggle('light',!!light);$('ov').classList.add('on');}
+$('ovClose').onclick=()=>$('ov').classList.remove('on');
+function modal(title,html){$('mTitle').textContent=title;$('mBody').innerHTML=html;$('modal').classList.add('on');}
+$('mClose').onclick=()=>$('modal').classList.remove('on');
+$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').classList.remove('on');};
+function textModal(title,txt,qr,sms){
+  modal(title,(qr?'<div class="qr" id="qrBox"></div>':'')+'<textarea id="mTxt" rows="8" readonly style="font-family:\'JetBrains Mono\',monospace;font-size:11px">'+esc(txt)+'</textarea><div class="row" style="margin-top:8px;flex-wrap:wrap"><button class="btn sm" id="mCopy">Copy</button>'+(sms?'<a class="btn sm ghost" style="text-decoration:none" href="sms:?body='+encodeURIComponent(txt)+'">Open in Messages</a>':'')+'</div>');
+  $('mCopy').onclick=()=>copy(txt);
+  if(qr){try{new QRCode($('qrBox'),{text:txt,width:200,height:200,correctLevel:QRCode.CorrectLevel.L});}catch(e){$('qrBox').innerHTML='<div class="small">QR unavailable here. Copy the text instead.</div>';}}
+}
+const curOf=c=>({cur:C[c].cur,sym:C[c].sym,rate:C[c].rate});
+function fmt(v,sym,cur){const dp=cur==='JPY'?0:2;return sym+(+v).toLocaleString('en-GB',{minimumFractionDigits:dp,maximumFractionDigits:dp});}
+const gbp=v=>fmt(v,'£','GBP');
+const stopOpts=(sel,withHome)=>(withHome?'<option value="home"'+(sel==='home'?' selected':'')+'>🇬🇧 Home (UK)</option>':'')+S.stops.map(s=>'<option value="'+s.id+'"'+(s.id===sel?' selected':'')+'>'+C[s.c].flag+' '+esc(sName(s))+'</option>').join('');
+
+// ---------- tabs ----------
+$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  $('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));
+  $('main').scrollTop=0;});
+function goTab(v){$('tabs').querySelector('[data-v="'+v+'"]').click();}
+
+// ---------- header ----------
+function renderHeader(){
+  if(S.active>=S.stops.length)S.active=0;
+  $('dest').innerHTML=S.stops.map((s,i)=>'<option value="'+i+'">'+(i+1)+'. '+esc(sName(s))+' · '+C[s.c].name+'</option>').join('');
+  $('dest').value=S.active;
+  const d=D();$('flag').textContent=d.flag;
+  $('tripLbl').textContent=(S.mode==='business'?'BUSINESS TRIP':'MY TRIP')+' · STOP '+(S.active+1)+' OF '+S.stops.length;
+  const diff=offsetDiff();
+  $('tripMeta').textContent=d.cur+' · Plugs '+d.plugs.join('/')+' · '+(diff===0?'Same time as UK':(diff>0?'+':'')+diff+'h vs UK');
+}
+$('dest').onchange=()=>{const i=+$('dest').value;S.active=i;if(S.sim&&S.stops[i].from)S.sim=S.stops[i].from;S.pin=null;S.me=null;save();renderAll();toast('Now in '+sName(S.stops[i]));};
+function offsetDiff(){return Math.round((tzOff(D().tz,Date.now())-tzOff(HOME.tz,Date.now()))/36e5*2)/2;}
+function hourIn(tz){return +new Intl.DateTimeFormat('en-GB',{hour:'numeric',hourCycle:'h23',timeZone:tz}).format(new Date(NOW()));}
+function callStatus(){const h=hourIn(HOME.tz),t=hm(NOW(),HOME.tz);if(h>=9&&h<21)return['ok','✓ Good time to call home ('+t+' in the UK)'];if(h>=7&&h<23)return['warn','Borderline: it\'s '+t+' in the UK'];return['bad','It\'s '+t+' in the UK. They may be asleep'];}
+
+// ---------- sun ----------
+function sunset(lat,lon,ds){const r=Math.PI/180;const jd=Date.parse(ds+'T12:00:00Z')/864e5+2440587.5;const n=Math.floor(jd-2451545+0.0008);const Js=n-lon/360;const M=(357.5291+0.98560028*Js)%360;const Cc=1.9148*Math.sin(M*r)+0.02*Math.sin(2*M*r)+0.0003*Math.sin(3*M*r);const L=(M+Cc+180+102.9372)%360;const Jt=2451545+Js+0.0053*Math.sin(M*r)-0.0069*Math.sin(2*L*r);const sd=Math.sin(L*r)*Math.sin(23.4397*r);const cw=(Math.sin(-0.833*r)-Math.sin(lat*r)*sd)/(Math.cos(lat*r)*Math.cos(Math.asin(sd)));if(cw<-1||cw>1)return null;const w=Math.acos(cw)/r;return(Jt+w/360-2440587.5)*864e5;}
+
+// ---------- events / reminders ----------
+function events(){
+  const ev=[];
+  S.bookings.forEach(b=>{const s=bStart(b),e=bEnd(b),tz=bTzS(b);
+    if(b.type==='flight'){ev.push({t:s-864e5,tz,i:'🛂',x:'Online check-in opens · '+b.title});ev.push({t:s-(b.sid==='home'||bSi(b)>=0?3*36e5:2*36e5)-S.travelMin*6e4,tz,i:'🚕',x:'Leave for the airport · '+b.title});ev.push({t:s,tz,i:'✈️',x:'Departs · '+b.title,main:1});}
+    else if(b.type==='ferry'){ev.push({t:s-90*6e4,tz,i:'⚓',x:'Be at the port · '+b.title});ev.push({t:s,tz,i:'⛴',x:'Sails · '+b.title,main:1});}
+    else if(isT(b)){ev.push({t:s-30*6e4,tz,i:ICON[b.type],x:'Be at the station · '+b.title});ev.push({t:s,tz,i:ICON[b.type],x:'Departs · '+b.title,main:1});}
+    else if(b.type==='hotel'){ev.push({t:s,tz,i:'🔑',x:'Check-in from '+hm(s,tz)+' · '+b.title,main:1});ev.push({t:e-60*6e4,tz:bTzE(b),i:'🧳',x:'Check out by '+hm(e,bTzE(b))+' · '+b.title});}
+    else ev.push({t:s,tz,i:ICON[b.type]||'📌',x:b.title,main:1});
+    if(b.cancel){const c=z2u(b.cancel,tz);ev.push({t:c-48*36e5,tz,i:'⏳',x:'Free cancellation ends in 48h · '+b.title});}
+  });
+  S.meetings.forEach(m=>{const i=sIdx(m.sid),tz=stopTz(i),t=z2u(m.at,tz);ev.push({t:t-45*6e4,tz,i:'🚶',x:'Leave for meeting · '+m.title});ev.push({t,tz,i:'💼',x:'Meeting · '+m.title+(m.place?' @ '+m.place:''),main:1});});
+  medTimes(2).forEach(x=>ev.push(x));
+  return ev.sort((a,b)=>a.t-b.t);
+}
+function medTimes(days){const out=[];const tz=D().tz;const base=dayOf(NOW(),tz);
+  S.meds.forEach(m=>{for(let k=0;k<days;k++){const ds=addDays(base,k);const t=m.m==='home'?z2u(dayOf(z2u(ds+'T12:00',tz),HOME.tz)+'T'+m.t,HOME.tz):z2u(ds+'T'+m.t,tz);out.push({t,tz,i:'💊',x:m.n+(m.m==='home'?' (on UK time)':'')});}});return out;}
+
+// ---------- TODAY ----------
+function renderBrief(){
+  const now=NOW(),d=D(),tz=d.tz,ds=dayOf(now,tz),st=tripStart(),en=tripEnd();
+  let dayLbl='Live · real date';
+  if(S.sim){const k=dBetween(st,S.sim)+1,N=dBetween(st,en)+1;dayLbl=(k<1?'Before trip':k>N?'After trip':'Day '+k+' of '+N);}
+  let h='<div class="datenav"><button id="dPrev" aria-label="Previous day">◀</button><div style="text-align:center"><div style="font-weight:800">'+fmtDate(ds)+'</div><div class="small">'+dayLbl+'</div><button class="mini" id="dLive">'+(S.sim?'Switch to real date':'Preview the trip')+'</button></div><button id="dNext" aria-label="Next day">▶</button></div>';
+  if(st&&ds<st){h+='<div class="flag-g" style="margin-top:10px">Trip starts in '+dBetween(ds,st)+' days. Your readiness checklist is in Plan.</div>';}
+  else if(en&&ds>en){h+='<div class="flag-g" style="margin-top:10px">Trip complete. See Money → Trip wrap-up.</div>';}
+  else{
+    h+='<div style="margin-top:10px;font-size:18px;font-weight:800">📍 '+esc(d.city)+'</div>';
+    const tonight=S.bookings.find(b=>b.type==='hotel'&&b.start.slice(0,10)<=ds&&b.end&&b.end.slice(0,10)>ds);
+    const out=S.bookings.find(b=>b.type==='hotel'&&b.end&&b.end.slice(0,10)===ds);
+    const nxt=events().find(e=>e.main&&e.t>=now);
+    const ss=sunset(d.lat,d.lon,ds);
+    h+='<div class="kv"><span>Next up</span><span>'+(nxt?nxt.i+' '+esc(nxt.x)+'<br><span class="small">'+wall(nxt.t,nxt.tz)+' · '+rel(nxt.t)+'</span>':'Nothing booked')+'</span></div>';
+    if(out)h+='<div class="kv"><span>Check out</span><span>by '+out.end.slice(11)+' · '+esc(out.title)+'</span></div>';
+    h+='<div class="kv"><span>Tonight</span><span>'+(tonight?'🏨 '+esc(tonight.title):(S.bookings.some(b=>isT(b)&&b.start.slice(0,10)===ds&&b.end&&b.end.slice(0,10)>ds)?'Overnight travel':'<span style="color:var(--coral)">No accommodation booked</span>'))+'</span></div>';
+    h+='<div class="kv"><span>Weather</span><span>'+d.wx[0][1]+' '+d.wx[0][0]+'°'+(ss?' · sunset '+hm(ss,tz):'')+'</span></div>';
+    if(S.timer)h+='<div class="flag-w">Check-in timer running. Due '+rel(S.timer.due)+'</div>';
+  }
+  $('brief').innerHTML=h;
+  const step=n=>{const base=S.sim||ds;let nd=addDays(base,n);if(st&&nd<addDays(st,-1))nd=addDays(st,-1);if(en&&nd>addDays(en,1))nd=addDays(en,1);S.sim=nd;const i=stopForDate(nd);if(i>=0)S.active=i;save();renderAll();};
+  $('dPrev').onclick=()=>step(-1);$('dNext').onclick=()=>step(1);
+  $('dLive').onclick=()=>{S.sim=S.sim?null:st;if(S.sim){const i=stopForDate(S.sim);if(i>=0)S.active=i;}save();renderAll();};
+}
+function renderReminders(){
+  const now=NOW();const up=events().filter(e=>e.t>=now).slice(0,6);
+  $('reminders').innerHTML=(up.length?up.map(e=>'<div class="kv"><span>'+e.i+' '+esc(e.x)+'</span><span style="white-space:nowrap">'+wall(e.t,e.tz,{weekday:'short',hour:'2-digit',minute:'2-digit'})+'<br><span class="small">'+rel(e.t)+'</span></span></div>').join(''):'<div class="small">Nothing scheduled.</div>')+
+   '<div class="small" style="margin-top:6px">Created from your bookings and scheduled on the phone itself, with no server and no push service.</div>';
+}
+function renderMeds(){
+  const tz=D().tz;
+  $('meds').innerHTML=(S.meds.length?S.meds.map((m,i)=>{const nx=medTimes(2).filter(x=>x.x.indexOf(m.n)===0&&x.t>=NOW())[0];
+    return '<div class="kv"><span>💊 '+esc(m.n)+'<br><span class="small">'+(m.m==='home'?m.t+' UK time = '+(nx?hm(nx.t,tz):'')+' local':m.t+' local = '+(nx?hm(nx.t,HOME.tz):'')+' UK')+'</span></span><span>'+(nx?rel(nx.t):'')+' <button class="x mini" data-i="'+i+'" style="color:var(--muted)">✕</button></span></div>';}).join(''):'<div class="small">No medication added.</div>')+
+   '<details style="margin-top:8px"><summary class="mini">+ Add medication</summary><div class="edit"><input id="mdN" placeholder="Name"><div class="two"><input id="mdT" type="time" value="08:00"><select class="in" id="mdM"><option value="local">Switch to local time</option><option value="home">Stay on UK time</option></select></div><button class="btn sm" id="mdAdd">Add</button></div></details>'+
+   '<div class="small" style="margin-top:6px">Some medicines must stay on a fixed schedule across time zones. Check with your pharmacist.</div>';
+  $('meds').querySelectorAll('button.x').forEach(b=>b.onclick=()=>{S.meds.splice(+b.dataset.i,1);save();renderAll();});
+  $('mdAdd').onclick=()=>{const n=$('mdN').value.trim();if(!n)return toast('Enter a name');S.meds.push({n,t:$('mdT').value||'08:00',m:$('mdM').value});save();renderAll();};
+}
+function renderReturn(){
+  const r=returnBk();
+  if(!r){$('returnCard').innerHTML='<div class="small">Add your journey home in Plan → Bookings wallet (departing from your last stop) to get a return countdown.</div>';return;}
+  const s=bStart(r),tz=bTzS(r),leave=s-3*36e5-S.travelMin*6e4;
+  $('returnCard').innerHTML='<div style="font-weight:800;font-size:16px">'+ICON[r.type]+' '+esc(r.title)+'</div><div class="small">'+wall(s,tz)+' local · '+rel(s)+'</div>'+
+   '<div class="kv" style="margin-top:6px"><span>Online check-in opens</span><span>'+wall(s-864e5,tz)+'</span></div>'+
+   '<div class="kv"><span>Leave for airport</span><span>'+wall(leave,tz)+'</span></div>'+
+   '<div class="kv"><span>Journey to airport</span><span><input id="trMin" type="number" value="'+S.travelMin+'" style="width:70px;padding:4px 6px"> min</span></div>'+
+   '<div class="kv"><span>Lands in the UK</span><span>'+wall(bEnd(r),HOME.tz)+'</span></div>'+
+   '<div class="flag-w">Passport, phone charger and boarding pass: check where they are before you leave. Customs allowances are in Guide.</div>';
+  $('trMin').onchange=()=>{S.travelMin=Math.max(0,+$('trMin').value||0);save();renderAll();};
+}
+function renderTimerMini(){$('timerMini').innerHTML='';}
+function tick(){
+  const d=D();
+  $('locLbl').textContent='Local · '+sName(S.stops[S.active]);$('locT').textContent=hm(NOW(),d.tz);$('homeT').textContent=hm(NOW(),HOME.tz);$('sbTime').textContent=hm(NOW(),d.tz);
+  const[c,m]=callStatus();$('callOk').innerHTML='<span class="pill '+c+'">'+esc(m)+'</span>';
+  renderDial();
+}
+function renderWx(){const d=D();const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];const base=new Date(dayOf(NOW(),d.tz)+'T12:00:00Z').getUTCDay();
+  $('wx').innerHTML=d.wx.map((w,i)=>'<div>'+(i?days[(base+6+i)%7]:'Today')+'<b>'+w[1]+'</b>'+w[0]+'°</div>').join('');}
+
+// ---------- PLAN ----------
+function renderMode(){
+  $('modeSeg').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.m===S.mode);b.onclick=()=>{S.mode=b.dataset.m;if(S.mode==='business'&&S.packTpl!=='Business')S.packTpl='Business';save();renderAll();toast(S.mode==='business'?'Business mode: meetings, receipts and expense report on':'Holiday mode');};});
+  $('modeNote').textContent=S.mode==='business'?'Adds meetings shown in local and UK time, daily allowances, receipt capture, an expense report and checks on permitted business activities.':'Switch to Business for meetings, daily allowances, receipts and an expense report.';
+}
+function renderRoute(){
+  const n=S.stops.length;
+  $('stopCount').textContent='· '+n+' of '+MAX_STOPS+' stops';
+  $('route').innerHTML=S.stops.map((s,i)=>{const c=C[s.c],on=i===S.active,nx=S.stops[i+1];
+    const nights=s.from&&s.to?dBetween(s.from,s.to):0;
+    let warn='';if(nx&&s.to&&nx.from&&s.to>nx.from)warn='<div class="flag-b">Overlaps the next stop by '+dBetween(nx.from,s.to)+' day(s)</div>';
+    else if(nx&&s.to&&nx.from&&dBetween(s.to,nx.from)>1)warn='<div class="flag-w">'+(dBetween(s.to,nx.from)-1)+' unplanned night(s) before the next stop</div>';
+    let ed='';if(editStop===i)ed='<div class="edit"><div class="two"><label class="f">Arrive<input type="date" id="eFrom" value="'+(s.from||'')+'"></label><label class="f">Leave<input type="date" id="eTo" value="'+(s.to||'')+'"></label></div>'+
+      '<div class="row"><button class="btn sm ghost" id="eMinus">− 1 day</button><button class="btn sm ghost" id="ePlus">+ 1 day</button><input id="eBud" type="number" placeholder="Daily budget" value="'+(s.budget||'')+'" style="flex:1"></div>'+
+      '<label class="row small" style="gap:6px"><input type="checkbox" id="eShift" checked style="width:auto"> Shift later stops and their bookings too</label>'+
+      '<div class="row"><button class="btn sm" id="eSave">Save changes</button><button class="btn sm ghost" id="eCancel">Cancel</button></div></div>';
+    return '<div class="stop'+(on?' on':'')+'" data-i="'+i+'"><div class="dot">'+(i+1)+'</div><div class="sinfo"><b>'+c.flag+' '+esc(sName(s))+'</b><div class="small">'+c.name+(s.from?' · '+fmtDate(s.from).slice(4)+(s.to?' – '+fmtDate(s.to).slice(4):''):'')+(nights?' · '+nights+' night'+(nights>1?'s':''):'')+'</div></div>'+
+      '<div class="ib"><button data-a="edit" aria-label="Change dates">✎</button><button data-a="up" '+(i===0?'disabled':'')+'>↑</button><button data-a="down" '+(i===n-1?'disabled':'')+'>↓</button><button data-a="del" '+(n===1?'disabled':'')+'>×</button></div></div>'+warn+ed;}).join('');
+  $('route').querySelectorAll('.stop').forEach(el=>{const i=+el.dataset.i;el.onclick=e=>{const a=e.target.dataset&&e.target.dataset.a;
+    if(a==='edit'){editStop=editStop===i?-1:i;renderRoute();return;}
+    if(a==='up'||a==='down'){const j=a==='up'?i-1:i+1;[S.stops[i],S.stops[j]]=[S.stops[j],S.stops[i]];if(S.active===i)S.active=j;else if(S.active===j)S.active=i;editStop=-1;save();renderAll();return;}
+    if(a==='del'){const st=S.stops.splice(i,1)[0];if(S.active>=i&&S.active>0)S.active--;editStop=-1;save();renderAll();toast('Removed '+sName(st)+'. Its bookings are flagged in the wallet');return;}
+    if(e.target.tagName!=='BUTTON'&&i!==S.active){S.active=i;if(S.sim&&S.stops[i].from)S.sim=S.stops[i].from;save();renderAll();}};});
+  if(editStop>=0&&S.stops[editStop]){const s=S.stops[editStop];
+    $('ePlus').onclick=()=>{$('eTo').value=addDays($('eTo').value||s.to,1);};
+    $('eMinus').onclick=()=>{$('eTo').value=addDays($('eTo').value||s.to,-1);};
+    $('eCancel').onclick=()=>{editStop=-1;renderRoute();};
+    $('eSave').onclick=()=>{const nf=$('eFrom').value,nt=$('eTo').value;if(nf&&nt&&nt<nf)return toast('Leave date is before arrival');
+      const delta=s.to&&nt?dBetween(s.to,nt):0;const shift=$('eShift').checked&&delta!==0;s.from=nf;s.to=nt;s.budget=+$('eBud').value||s.budget;
+      let ns=0,nb=0;
+      if(shift){const later=S.stops.slice(editStop+1);later.forEach(x=>{x.from=addDays(x.from,delta);x.to=addDays(x.to,delta);ns++;});
+        const ids=later.map(x=>x.id);S.bookings.forEach(b=>{if(ids.includes(b.sid)||(b.sid===s.id&&isT(b))){b.start=shiftDT(b.start,delta);b.end=shiftDT(b.end,delta);nb++;}});}
+      editStop=-1;save();renderAll();
+      toast(shift?('Moved '+ns+' stop(s) and '+nb+' booking(s) by '+(delta>0?'+':'')+delta+' day(s). Check change fees in the wallet'):'Dates updated');};
+  }
+  const cs=tripCountries(),curs=[...new Set(cs.map(c=>C[c].cur))],volts=cs.some(c=>C[c].volt<200);
+  const offs=[...new Set(cs.map(c=>new Intl.DateTimeFormat('en-GB',{timeZone:C[c].tz,timeZoneName:'shortOffset'}).formatToParts(new Date()).find(x=>x.type==='timeZoneName').value))];
+  const ch=t=>'<span class="chip" style="cursor:default">'+t+'</span>';
+  $('routeSum').innerHTML='<div class="chips" style="margin-top:0">'+ch(cs.length+' countr'+(cs.length>1?'ies':'y'))+ch(fmtDate(tripStart()).slice(4)+' – '+fmtDate(tripEnd()).slice(4))+ch(curs.join(' · '))+ch('Plugs '+tripPlugs().join('/'))+(volts?'<span class="chip" style="cursor:default;background:#fbe3dc">110V stop</span>':'')+ch(offs.join(' / '))+'</div>';
+  if(n>=MAX_STOPS){$('addStopWrap').innerHTML='<div class="small" style="margin-top:8px">Maximum of '+MAX_STOPS+' stops reached.</div>';return;}
+  const last=S.stops[n-1];
+  $('addStopWrap').innerHTML='<details style="margin-top:10px"><summary class="btn ghost" style="text-align:center;display:block">+ Add a stop</summary><div class="edit">'+
+   '<select class="in" id="nsC">'+Object.keys(C).map(k=>'<option value="'+k+'">'+C[k].flag+' '+C[k].name+'</option>').join('')+'</select><input id="nsCity" placeholder="City or area (optional)">'+
+   '<div class="two"><label class="f">Arrive<input id="nsFrom" type="date" value="'+(last&&last.to||'')+'"></label><label class="f">Leave<input id="nsTo" type="date"></label></div><button class="btn" id="nsAdd">Add to route</button></div></details>';
+  $('nsAdd').onclick=()=>{const f=$('nsFrom').value,t=$('nsTo').value;if(f&&t&&t<f)return toast('Leave date is before arrival');const c=$('nsC').value;
+    S.stops.push({id:'s'+uid(),c,city:$('nsCity').value.trim(),from:f,to:t,budget:0});save();renderAll();toast('Stop '+S.stops.length+' added · '+C[c].name+' pack ready offline');};
+}
+function renderSchengen(){
+  const days=new Set();S.stops.forEach(s=>{if(X[s.c].sch&&s.from&&s.to){for(let d=s.from;d<=s.to;d=addDays(d,1))days.add(d);}});
+  const arr=[...days].sort();let mx=0,mxd='';
+  arr.forEach(d=>{const lo=addDays(d,-179);const c=arr.filter(x=>x>=lo&&x<=d).length+(+S.schPrior||0);if(c>mx){mx=c;mxd=d;}});
+  if(!arr.length){$('schengen').innerHTML='<div class="small">No Schengen stops on this route.</div>';return;}
+  const left=90-mx,p=Math.min(100,mx/90*100);
+  $('schengen').innerHTML='<div class="row" style="justify-content:space-between"><b style="font-size:22px">'+mx+' / 90 days</b><span class="pill '+(left<0?'bad':left<15?'warn':'ok')+'">'+(left<0?'Over by '+(-left):left+' left')+'</span></div><div class="bar"><i class="'+(left<0?'over':'')+'" style="width:'+p+'%"></i></div>'+
+   '<div class="kv" style="margin-top:6px"><span>Schengen days already used in the last 180</span><span><input id="schP" type="number" min="0" value="'+(S.schPrior||0)+'" style="width:70px;padding:4px 6px"></span></div>'+
+   '<div class="small">Counts every day you are in a Schengen country, including arrival and departure days, in any rolling 180-day window. It updates automatically when you extend a stop.</div>';
+  $('schP').onchange=()=>{S.schPrior=Math.max(0,+$('schP').value||0);save();renderSchengen();};
+}
+function renderWallet(){
+  const now=NOW();
+  const list=sorted().map(b=>{const si=bSi(b),orphan=b.sid!=='home'&&si<0,s=bStart(b),e=bEnd(b),tzS=bTzS(b),tzE=bTzE(b);
+    let fl='';
+    if(orphan)fl+='<div class="flag-b">Its stop was removed from the route. Change or cancel this booking</div>';
+    else if(b.type==='hotel'&&si>=0){const st=S.stops[si];if(st.from&&b.start.slice(0,10)>st.from)fl+='<div class="flag-w">Starts after you arrive ('+fmtDate(st.from)+'). Book the extra night(s)</div>';if(st.to&&b.end&&b.end.slice(0,10)<st.to)fl+='<div class="flag-b">Ends '+dBetween(b.end.slice(0,10),st.to)+' night(s) before you leave. Extend this booking or book another</div>';if(st.to&&b.end&&b.end.slice(0,10)>st.to)fl+='<div class="flag-w">Runs past your leave date. Shorten it to save money</div>';}
+    if(b.cancel){const c=z2u(b.cancel,tzS);fl+=c>now?'<div class="'+(c-now<72*36e5?'flag-w':'flag-g')+'">Free cancellation ends '+rel(c)+' · '+wall(c,tzS)+'</div>':'<div class="small" style="margin-top:4px">Free cancellation period ended</div>';}
+    else fl+='<div class="small" style="margin-top:4px">Non-refundable. Change fees may apply</div>';
+    return '<div class="bk"><div class="ico">'+(ICON[b.type]||'📌')+'</div><div class="body"><b>'+esc(b.title)+'</b> <span class="ref">'+esc(b.ref||'—')+'</span>'+
+     '<div class="small">'+wall(s,tzS)+(b.end?' → '+wall(e,tzE):'')+'</div>'+fl+
+     '<div class="row" style="margin-top:6px;gap:12px">'+(b.addr?'<button class="mini" data-taxi="'+b.id+'">🚕 Show address</button>':'')+(b.planB?'<button class="mini" data-pb="'+b.id+'">↪ Plan B</button>':'<button class="mini" data-pb="'+b.id+'">+ Plan B</button>')+'<button class="mini" data-del="'+b.id+'" style="color:var(--muted)">Remove</button></div></div></div>';}).join('');
+  $('wallet').innerHTML=(list||'<div class="small">No bookings yet.</div>')+
+   '<details style="margin-top:8px"><summary class="btn ghost" style="text-align:center;display:block">+ Add booking</summary><div class="edit">'+
+   '<div class="two"><select class="in" id="bT">'+Object.keys(ICON).map(k=>'<option value="'+k+'">'+ICON[k]+' '+k[0].toUpperCase()+k.slice(1)+'</option>').join('')+'</select><input id="bR" placeholder="Booking ref"></div>'+
+   '<input id="bTi" placeholder="e.g. Hotel name or Rome → Florence">'+
+   '<label class="f">Departing from / stay at<select class="in" id="bS">'+stopOpts(S.stops[S.active].id,true)+'</select></label>'+
+   '<div class="two"><label class="f">Start (local)<input type="datetime-local" id="bSt"></label><label class="f">End (local)<input type="datetime-local" id="bEn"></label></div>'+
+   '<label class="f">Free cancellation until<input type="datetime-local" id="bC"></label><input id="bA" placeholder="Address (for the taxi card)"><input id="bP" placeholder="Plan B if this goes wrong (optional)">'+
+   '<button class="btn" id="bAdd">Save booking</button><div class="small">In the Android build you can share a confirmation email or PDF to Pocketbook and it fills this in on the device.</div></div></details>';
+  $('wallet').querySelectorAll('[data-taxi]').forEach(x=>x.onclick=()=>{const b=S.bookings.find(y=>y.id===x.dataset.taxi);overlay('Please take me to',b.addr,b.title,true);});
+  $('wallet').querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>{S.bookings=S.bookings.filter(y=>y.id!==x.dataset.del);save();renderAll();toast('Booking removed');});
+  $('wallet').querySelectorAll('[data-pb]').forEach(x=>x.onclick=()=>{const b=S.bookings.find(y=>y.id===x.dataset.pb);
+    modal('Plan B · '+b.title,'<textarea id="pbT" rows="4" placeholder="e.g. Later flight, train alternative, nearby hotel">'+esc(b.planB||'')+'</textarea><button class="btn" id="pbS" style="width:100%;margin-top:8px">Save Plan B</button><div class="small" style="margin-top:6px">Stored offline, so it is ready when the airport Wi-Fi is not.</div>');
+    $('pbS').onclick=()=>{b.planB=$('pbT').value.trim();save();$('modal').classList.remove('on');renderAll();toast('Plan B saved');};});
+  $('bAdd').onclick=()=>{const st=$('bSt').value;if(!$('bTi').value.trim()||!st)return toast('Add a title and start time');
+    S.bookings.push({id:'b'+uid(),type:$('bT').value,title:$('bTi').value.trim(),ref:$('bR').value.trim(),sid:$('bS').value,start:st,end:$('bEn').value,cancel:$('bC').value,addr:$('bA').value.trim(),planB:$('bP').value.trim()});save();renderAll();toast('Booking saved offline');};
+}
+function renderConnections(){
+  const out=[];const tr=sorted().filter(isT);
+  ['home',...S.stops.map(s=>s.id)].forEach((p,k)=>{const from=k===0?'Home':sName(S.stops[k-1]),to=k<S.stops.length?sName(S.stops[k]):'Home';
+    if(!tr.some(b=>b.sid===p))out.push(['b','No transport booked: '+from+' → '+to]);});
+  tr.forEach(b=>{const si=bSi(b);
+    const co=S.bookings.find(h=>h.type==='hotel'&&h.sid===b.sid&&h.end&&h.end.slice(0,10)===b.start.slice(0,10));
+    if(co){const gap=(bStart(b)-bEnd(co))/6e4;const need=b.type==='flight'?180+S.travelMin:60;
+      if(gap<need)out.push([gap<need-60?'b':'w','Tight: check out '+co.end.slice(11)+', '+b.type+' departs '+b.start.slice(11)+' ('+Math.floor(gap/60)+'h'+(gap%60?' '+gap%60+'m':'')+'). Allow at least '+Math.round(need/60*10)/10+'h. Ask for a late check-out or move the booking']);}
+    const nx=S.stops[si+1];if(nx){const ci=S.bookings.find(h=>h.type==='hotel'&&h.sid===nx.id);
+      if(ci&&b.end){const wait=(bStart(ci)-bEnd(b))/36e5;if(wait>4)out.push(['w','Arrive '+sName(nx)+' '+b.end.slice(11)+' but check-in is from '+ci.start.slice(11)+' ('+Math.round(wait)+'h wait). Request early check-in or use luggage storage']);
+        if(wait<0)out.push(['b','You arrive in '+sName(nx)+' after your accommodation has started']);}}
+    if(b.type==='ferry'){const next=tr.find(x=>bStart(x)>bStart(b)&&x.type==='flight');if(next&&(bStart(next)-bEnd(b))<24*36e5)out.push(['b','Ferry within 24h of a flight. Strong winds can cancel sailings, so add a buffer day']);else out.push(['w','Ferries can be cancelled in strong winds (meltemi in summer). Plan B is saved: '+(b.planB?'yes':'no')]);}
+  });
+  for(let i=0;i<tr.length-1;i++){const a=tr[i],b=tr[i+1];const g=(bStart(b)-bEnd(a))/6e4;if(g>=0&&g<120)out.push(['b','Only '+g+' min between '+a.title+' and '+b.title]);}
+  $('connections').innerHTML=out.length?out.map(([k,t])=>'<div class="flag-'+(k==='b'?'b':'w')+'">'+esc(t)+'</div>').join(''):'<div class="flag-g">All legs booked with sensible buffers ✓</div>';
+}
+function renderMeetings(){
+  if(S.mode!=='business'){$('meetingsWrap').innerHTML='';return;}
+  $('meetingsWrap').innerHTML='<h2>Meetings</h2><div class="card">'+(S.meetings.length?S.meetings.slice().sort((a,b)=>a.at<b.at?-1:1).map((m,i)=>{const tz=stopTz(sIdx(m.sid)),t=z2u(m.at,tz);
+    return '<div class="kv"><span>💼 '+esc(m.title)+'<br><span class="small">'+esc(m.place||'')+' · '+esc(sName(S.stops[sIdx(m.sid)]))+'</span></span><span>'+wall(t,tz)+'<br><span class="small">UK '+hm(t,HOME.tz)+' · <button class="mini" data-mi="'+m.id+'">remove</button></span></span></div>';}).join(''):'<div class="small">No meetings yet.</div>')+
+   '<details style="margin-top:8px"><summary class="mini">+ Add meeting</summary><div class="edit"><input id="mtT" placeholder="Meeting title"><input id="mtP" placeholder="Venue / address"><div class="two"><select class="in" id="mtS">'+stopOpts(S.stops[S.active].id)+'</select><input type="datetime-local" id="mtA"></div><button class="btn sm" id="mtAdd">Add meeting</button></div></details>'+
+   '<div class="small" style="margin-top:6px">A "leave for meeting" reminder is set 45 minutes before. The venue appears on a taxi card.</div></div>';
+  $('meetingsWrap').querySelectorAll('[data-mi]').forEach(b=>b.onclick=()=>{S.meetings=S.meetings.filter(m=>m.id!==b.dataset.mi);save();renderAll();});
+  $('mtAdd').onclick=()=>{if(!$('mtT').value||!$('mtA').value)return toast('Add a title and time');S.meetings.push({id:uid(),title:$('mtT').value,place:$('mtP').value,sid:$('mtS').value,at:$('mtA').value});save();renderAll();toast('Meeting added');};
+}
+function addMonths(ds,m){const d=new Date(ds+'T00:00:00Z');d.setUTCMonth(d.getUTCMonth()+m);return d.toISOString().slice(0,10);}
+function renderDocs(){
+  const D_=S.docs,ret=tripEnd(),checks=[];
+  const schS=S.stops.filter(s=>X[s.c].sch);
+  if(D_.pass){
+    if(schS.length){const lastOut=schS.reduce((a,s)=>s.to>a?s.to:a,'');const need=addMonths(lastOut,3);checks.push(D_.pass>=need?['g','Passport valid 3+ months after leaving Schengen ('+fmtDate(need)+')']:['b','Passport must be valid until at least '+fmtDate(need)+' for Schengen. Renew now']);
+      const firstIn=schS.reduce((a,s)=>!a||s.from<a?s.from:a,'');if(D_.issued){const lim=addMonths(D_.issued,120);checks.push(firstIn<=lim?['g','Passport issued under 10 years before entry']:['b','Passport issued more than 10 years before your Schengen entry. Renew it']);}}
+    S.stops.filter(s=>X[s.c].pm===6).forEach(s=>{const need=addMonths(s.from,6);checks.push(D_.pass>=need?['g','6 months\' validity on arrival in '+C[s.c].name]:['b','Needs 6 months\' validity on arrival in '+C[s.c].name+' (until '+fmtDate(need)+')']);});
+    if(D_.pass<ret)checks.push(['b','Passport expires before you return']);
+  }
+  if(D_.lic)checks.push(D_.lic>=ret?['g','Driving licence valid for the whole trip']:['b','Driving licence expires during the trip']);
+  if(D_.ins)checks.push(D_.ins>=ret?['g','Travel insurance covers the whole trip']:['b','Insurance ends '+fmtDate(D_.ins)+' but you return '+fmtDate(ret)+'. Extend the cover']);
+  const idp=tripCountries().filter(c=>X[c].idp).map(c=>C[c].flag+' '+C[c].name+': IDP '+X[c].idp.toLowerCase());
+  const entry=[];if(schS.length)entry.push(['Schengen ('+[...new Set(schS.map(s=>C[s.c].name))].join(', ')+')',SCH_ENTRY]);tripCountries().filter(c=>X[c].entry).forEach(c=>entry.push([C[c].name,X[c].entry]));
+  $('docs').innerHTML='<div class="two"><label class="f">Passport expiry<input type="date" data-k="pass" value="'+(D_.pass||'')+'"></label><label class="f">Passport issued<input type="date" data-k="issued" value="'+(D_.issued||'')+'"></label><label class="f">Driving licence expiry<input type="date" data-k="lic" value="'+(D_.lic||'')+'"></label><label class="f">Insurance ends<input type="date" data-k="ins" value="'+(D_.ins||'')+'"></label></div>'+
+   '<div style="margin-top:8px">'+checks.map(([k,t])=>'<div class="flag-'+k+'">'+(k==='g'?'✓ ':'⚠ ')+esc(t)+'</div>').join('')+'</div>'+
+   (idp.length?'<div class="small" style="font-weight:800;margin-top:10px">DRIVING PERMITS</div>'+idp.map(t=>'<div class="li">'+esc(t)+'</div>').join(''):'')+
+   '<div class="small" style="font-weight:800;margin-top:10px">ENTRY RULES</div>'+entry.map(([n,l])=>'<div style="font-weight:700;font-size:13px;margin-top:4px">'+esc(n)+'</div>'+l.map(t=>'<div class="li">'+esc(t)+'</div>').join('')).join('')+
+   (S.mode==='business'?'<div class="small" style="font-weight:800;margin-top:10px">BUSINESS TRAVEL</div><div class="li">Visitors can usually attend meetings and conferences but not do paid work. Check the permitted activities for each country</div><div class="li">Ask HR whether you need a certificate of social security cover for work in the EU</div>':'')+
+   '<div class="small" style="margin-top:8px">Rules change. Always confirm on GOV.UK foreign travel advice before booking.</div>';
+  $('docs').querySelectorAll('input[data-k]').forEach(i=>i.onchange=()=>{S.docs[i.dataset.k]=i.value;save();renderAll();});
+}
+function renderReady(){
+  const cs=tripCountries(),eu=cs.filter(c=>C[c].eu),non=cs.filter(c=>!C[c].eu);
+  const it=[['passport','Passport checks pass (see Documents)'],['ins','Travel insurance covers all '+cs.length+' countr'+(cs.length>1?'ies':'y')+' and is saved to the vault']];
+  if(eu.length)it.push(['ghic','GHIC card packed for '+eu.map(c=>C[c].name).join(', ')]);
+  non.forEach(c=>it.push(['entry-'+c,'Entry rules done for '+C[c].name]));
+  if(S.stops.length>1)it.push(['legs','Transport between all stops booked']);
+  it.push(['bank','Bank told about travel to '+cs.map(c=>C[c].name).join(', ')],['roam','Roaming or eSIM sorted for '+cs.length+' countr'+(cs.length>1?'ies':'y')],['pack','Offline packs downloaded ('+cs.length+')'],['ice','Emergency contact and home number saved'],['adapt','Plug adapters packed: Type '+tripPlugs().join('/')],['embassy','British embassy details saved for each country'],['home','Home checklist done']);
+  if(S.mode==='business')it.push(['biz','Permitted business activities checked'],['bizdocs','Meeting materials saved offline']);
+  const R=S.ready;
+  $('readyList').innerHTML=it.map(([k,l])=>'<div class="check'+(R[k]?' done':'')+'" data-k="'+k+'"><div class="box"></div><span>'+esc(l)+'</span></div>').join('');
+  $('readyList').querySelectorAll('.check').forEach(el=>el.onclick=()=>{R[el.dataset.k]=!R[el.dataset.k];save();renderReady();});
+  const n=it.filter(([k])=>R[k]).length,p=Math.round(n/it.length*100);
+  $('readyPct').textContent=p+'%';$('ringArc').setAttribute('stroke-dasharray',p+' 100');$('readyTxt').textContent=p===100?'All set. Have a great trip!':(it.length-n)+' checks left before you go';
+}
+function renderHome(){
+  const H=S.home;const done=HOME_TASKS.filter((_,i)=>H[i]).length;
+  $('homeList').innerHTML=HOME_TASKS.map((t,i)=>'<div class="check'+(H[i]?' done':'')+'" data-i="'+i+'"><div class="box"></div><span>'+esc(t)+'</span></div>').join('')+'<div class="small" style="margin-top:6px">'+done+' of '+HOME_TASKS.length+' done</div>';
+  $('homeList').querySelectorAll('.check').forEach(el=>el.onclick=()=>{H[el.dataset.i]=!H[el.dataset.i];if(HOME_TASKS.every((_,i)=>H[i]))S.ready.home=true;save();renderHome();renderReady();});
+}
+function itineraryText(){
+  return 'POCKETBOOK ITINERARY\n'+S.stops.map((s,i)=>(i+1)+'. '+sName(s)+', '+C[s.c].name+' '+(s.from||'?')+' to '+(s.to||'?')+
+    S.bookings.filter(b=>b.sid===s.id&&b.type==='hotel').map(b=>'\n   Stay: '+b.title+(b.addr?' ('+b.addr+')':'')).join('')).join('\n')+
+    '\nTravel:\n'+sorted().filter(isT).map(b=>' '+b.start.replace('T',' ')+' '+b.title+(b.ref?' ['+b.ref+']':'')).join('\n')+
+    (S.homeNum?'\nContact: '+S.homeNum:'');
+}
+$('shareBtn').onclick=()=>textModal('Share itinerary',itineraryText(),true,true);
+
+// ---------- MONEY ----------
+function renderConv(){
+  const d=D();const a=parseFloat($('amt').value)||0;const from=S.toLocal?HOME:d,to=S.toLocal?d:HOME;const out=S.toLocal?a*d.rate:a/d.rate;
+  $('convDir').textContent=from.cur+' → '+to.cur;$('convOut').textContent=fmt(out,to.sym,to.cur);
+  $('rateLine').textContent='£1 = '+fmt(d.rate,d.sym,d.cur)+' · cached sample rate, works offline';
+  const q=S.toLocal?[10,20,50,100]:(d.cur==='JPY'?[1000,3000,5000,10000]:d.cur==='THB'?[100,500,1000,2000]:[5,10,20,50]);
+  $('quick').innerHTML=q.map(v=>'<span class="chip">'+from.sym+v+'</span>').join('');
+  $('quick').querySelectorAll('.chip').forEach((c,i)=>c.onclick=()=>{$('amt').value=q[i];renderConv();});
+}
+$('amt').oninput=renderConv;$('swap').onclick=()=>{S.toLocal=!S.toLocal;save();renderConv();};
+const CATS=()=>S.mode==='business'?['Travel','Hotel','Meals','Client','Other']:['Food','Transport','Stay','Activities','Shopping','Other'];
+const expGBP=e=>e.a/C[e.c].rate;
+function renderTravellers(){
+  $('travellers').innerHTML='<div class="chips" style="margin-top:0">'+S.travellers.map((t,i)=>'<span class="chip" data-i="'+i+'">'+esc(t)+(i?' ✕':'')+'</span>').join('')+'</div><div class="row" style="margin-top:8px"><input id="tvN" placeholder="Add a travel companion"><button class="btn sm" id="tvAdd">Add</button></div>';
+  $('travellers').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;if(!i)return;const n=S.travellers[i];if(S.exp.some(e=>e.by===n))return toast(n+' has paid for things. Remove those first');S.travellers.splice(i,1);save();renderAll();});
+  $('tvAdd').onclick=()=>{const n=$('tvN').value.trim();if(!n||S.travellers.includes(n))return;S.travellers.push(n);save();renderAll();};
+}
+function renderSpend(){
+  const d=D();
+  const list=S.exp.map((e,i)=>{const c=C[e.c];return '<div class="exp"><span>'+esc(e.d)+'<div class="small">'+c.flag+' '+esc(sName(S.stops[sIdx(e.sid)])||'')+' · '+esc(e.cat||'')+(S.travellers.length>1?' · paid by '+esc(e.by):'')+(e.rc?' · 🧾':'')+'</div></span><span style="text-align:right">'+fmt(e.a,c.sym,c.cur)+'<div class="small">≈ '+gbp(expGBP(e))+'</div></span><button class="x" data-i="'+i+'">×</button></div>';}).join('');
+  const by={};S.exp.forEach(e=>{const c=C[e.c];by[c.cur]=(by[c.cur]||0)+e.a;});
+  const tot=S.exp.reduce((s,e)=>s+expGBP(e),0);
+  $('spend').innerHTML='<input id="exD" placeholder="What for?"><div class="two" style="margin-top:8px"><input id="exA" type="number" inputmode="decimal" placeholder="Amount in '+d.cur+'"><select class="in" id="exC">'+CATS().map(c=>'<option>'+c+'</option>').join('')+'</select></div>'+
+   (S.travellers.length>1?'<label class="f" style="margin-top:8px">Paid by<select class="in" id="exB">'+S.travellers.map(t=>'<option>'+esc(t)+'</option>').join('')+'</select></label>':'')+
+   (S.mode==='business'?'<label class="btn ghost sm" style="display:block;text-align:center;margin-top:8px">🧾 Attach receipt photo<input type="file" id="exR" accept="image/*" hidden></label>':'')+
+   '<button class="btn" id="exAdd" style="width:100%;margin-top:8px">Add expense in '+d.cur+'</button><div style="margin-top:6px">'+(list||'<div class="small">No spending logged yet.</div>')+'</div>'+
+   '<div class="row" style="justify-content:space-between;margin-top:10px;font-weight:800"><span>Total</span><span style="text-align:right">'+gbp(tot)+'<div class="small" style="font-weight:600">'+Object.keys(by).map(k=>{const c=Object.values(C).find(x=>x.cur===k);return fmt(by[k],c.sym,k);}).join(' + ')+'</div></span></div>';
+  let rc=false;if($('exR'))$('exR').onchange=()=>{rc=true;toast('Receipt attached (kept on device)');};
+  $('spend').querySelectorAll('.x').forEach(b=>b.onclick=()=>{S.exp.splice(+b.dataset.i,1);save();renderAll();});
+  $('exAdd').onclick=()=>{const a=parseFloat($('exA').value);if(!a)return toast('Enter an amount');S.exp.unshift({d:$('exD').value.trim()||'Expense',a,c:d.code,sid:d.id,by:$('exB')?$('exB').value:'Me',cat:$('exC').value,rc});save();renderAll();toast('Expense added');};
+}
+function renderSettle(){
+  const T=S.travellers;if(T.length<2){$('settle').innerHTML='<div class="small">Add a travel companion to split costs automatically.</div>';return;}
+  const bal={};T.forEach(t=>bal[t]=0);S.exp.forEach(e=>{const v=expGBP(e);if(bal[e.by]===undefined)bal[e.by]=0;bal[e.by]+=v;T.forEach(t=>bal[t]-=v/T.length);});
+  const cr=T.filter(t=>bal[t]>0.005).map(t=>[t,bal[t]]),db=T.filter(t=>bal[t]<-0.005).map(t=>[t,-bal[t]]);const tx=[];
+  while(cr.length&&db.length){const a=db[0],b=cr[0],v=Math.min(a[1],b[1]);tx.push(a[0]+' pays '+b[0]+' '+gbp(v));a[1]-=v;b[1]-=v;if(a[1]<.005)db.shift();if(b[1]<.005)cr.shift();}
+  $('settle').innerHTML=T.map(t=>'<div class="kv"><span>'+esc(t)+'</span><span style="color:'+(bal[t]>=0?'var(--ok)':'var(--coral)')+'">'+(bal[t]>=0?'+':'−')+gbp(Math.abs(bal[t]))+'</span></div>').join('')+
+   '<div style="margin-top:8px">'+(tx.length?tx.map(t=>'<div class="flag-g">'+esc(t)+'</div>').join(''):'<div class="flag-g">All square ✓</div>')+'</div><div class="small" style="margin-top:6px">Split equally and converted to pounds at cached rates.</div>';
+}
+function renderBudget(){
+  $('budget').innerHTML=S.stops.map((s,i)=>{const c=C[s.c],n=s.from&&s.to?Math.max(1,dBetween(s.from,s.to)):1,plan=(s.budget||0)*n,act=S.exp.filter(e=>e.sid===s.id).reduce((a,e)=>a+e.a,0),p=plan?Math.min(100,act/plan*100):0;
+    return '<div style="padding:8px 0;border-bottom:1px dashed var(--line)"><div class="row" style="justify-content:space-between;font-size:14px"><b>'+c.flag+' '+esc(sName(s))+'</b><span>'+fmt(act,c.sym,c.cur)+' / '+(plan?fmt(plan,c.sym,c.cur):'<span class="small">no budget</span>')+'</span></div>'+
+     '<div class="bar"><i class="'+(plan&&act>plan?'over':'')+'" style="width:'+p+'%"></i></div><div class="row small" style="margin-top:4px;justify-content:space-between"><span>'+n+' day'+(n>1?'s':'')+' × <input data-b="'+i+'" type="number" value="'+(s.budget||'')+'" placeholder="0" style="width:70px;padding:3px 6px"> '+c.cur+(S.mode==='business'?' daily allowance':' / day')+'</span><span>'+(plan?(act>plan?'Over by '+fmt(act-plan,c.sym,c.cur):fmt(plan-act,c.sym,c.cur)+' left'):'')+'</span></div></div>';}).join('');
+  $('budget').querySelectorAll('input[data-b]').forEach(x=>x.onchange=()=>{S.stops[+x.dataset.b].budget=+x.value||0;save();renderBudget();});
+}
+function renderWrap(){
+  const curs=[...new Set(S.stops.map(s=>s.c))].filter((c,i,a)=>a.findIndex(x=>C[x].cur===C[c].cur)===i);
+  const tot=S.exp.reduce((s,e)=>s+expGBP(e),0);const cats={};S.exp.forEach(e=>cats[e.cat]=(cats[e.cat]||0)+expGBP(e));
+  const left=curs.reduce((a,c)=>a+(+S.leftover[C[c].cur]||0)/C[c].rate,0);const eu=tripCountries().some(c=>C[c].eu);
+  $('wrap').innerHTML='<div class="kv"><span>Total spent</span><span>'+gbp(tot)+'</span></div>'+Object.keys(cats).map(k=>'<div class="kv"><span>'+esc(k)+'</span><span>'+gbp(cats[k])+'</span></div>').join('')+
+   '<div class="small" style="font-weight:800;margin-top:10px">LEFTOVER CASH</div>'+curs.map(c=>'<div class="kv"><span>'+C[c].cur+'</span><span><input data-lo="'+C[c].cur+'" type="number" value="'+(S.leftover[C[c].cur]||'')+'" placeholder="0" style="width:90px;padding:4px 6px"></span></div>').join('')+
+   '<div class="kv"><span>Worth about</span><span>'+gbp(left)+'</span></div>'+
+   (eu?'<div class="flag-w">Tax-free shopping: UK residents can claim VAT back on eligible EU purchases. Get the form in the shop and have it validated at your last EU exit point.</div>':'')+
+   '<button class="btn" id="wrapBtn" style="width:100%;margin-top:10px">'+(S.mode==='business'?'Create expense report (CSV)':'Create trip summary')+'</button>';
+  $('wrap').querySelectorAll('input[data-lo]').forEach(x=>x.onchange=()=>{S.leftover[x.dataset.lo]=+x.value||0;save();renderWrap();});
+  $('wrapBtn').onclick=()=>{
+    if(S.mode==='business'){const rows=['Date,Stop,Category,Description,Amount,Currency,GBP,Receipt'].concat(S.exp.map(e=>[S.sim||dayOf(Date.now(),HOME.tz),sName(S.stops[sIdx(e.sid)]),e.cat,'"'+e.d.replace(/"/g,'""')+'"',e.a,C[e.c].cur,expGBP(e).toFixed(2),e.rc?'Yes':'No'].join(',')));textModal('Expense report',rows.join('\n'));}
+    else textModal('Trip summary','Trip: '+S.stops.map(sName).join(' → ')+'\n'+fmtDate(tripStart())+' – '+fmtDate(tripEnd())+'\nCountries: '+tripCountries().map(c=>C[c].name).join(', ')+'\nSpent: '+gbp(tot)+'\n'+Object.keys(cats).map(k=>' '+k+': '+gbp(cats[k])).join('\n')+'\nJournal entries: '+S.journal.length);
+  };
+}
+
+// ---------- SAFETY ----------
+function renderSOS(){const d=D();$('sos').innerHTML=d.sos.map((s,i)=>'<a href="tel:'+s[1]+'" class="'+(i===0?'main':(s[2]?'':'alt'))+'">'+esc(s[0])+'<b>'+s[1]+'</b></a>').join('');}
+function renderDial(){
+  const d=D();const raw=(S.homeNum||'').replace(/[^\d+]/g,'');
+  if(!raw){$('dialFmt').textContent='Enter a number to see the correct international format.';$('dialBtn').href='#';$('callWarn').innerHTML='';return;}
+  const nat=raw.replace(/^\+44/,'').replace(/^0044/,'').replace(/^0/,'');
+  $('dialFmt').innerHTML='Saved as: <b>+44 '+esc(nat.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'))+'</b><br>Dialling from '+esc(d.name)+': <b>'+esc(d.exit+' 44 '+nat)+'</b>';
+  $('dialBtn').href='tel:+44'+nat;$('dialBtn').textContent='Call home · +44 '+nat;
+  const[c,m]=callStatus();$('callWarn').innerHTML='<span class="pill '+c+'">'+esc(m)+'</span>';
+}
+$('homeNum').oninput=()=>{S.homeNum=$('homeNum').value;save();renderDial();};
+function renderTimer(){
+  if(!S.timer){
+    $('timer').innerHTML='<div class="small">Going somewhere alone or late? Set a time to check in. If you don\'t confirm, Pocketbook prompts you to send a prepared alert with your last location. It runs on the phone only.</div>'+
+     '<input id="tmL" placeholder="Where are you going? e.g. Evening hike to Seitan Limania" style="margin-top:8px"><div class="chips" id="tmQ"><span class="chip" data-m="30">30 min</span><span class="chip" data-m="60">1 hour</span><span class="chip" data-m="120">2 hours</span><span class="chip" data-m="180">3 hours</span><span class="chip" data-m="0.17">Demo: 10 sec</span></div>';
+    $('tmQ').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{S.timer={due:Date.now()+(+c.dataset.m)*6e4,label:$('tmL').value.trim()||'Out and about',set:Date.now()};save();renderTimer();toast('Check-in timer started');});
+  } else {
+    const left=Math.max(0,S.timer.due-Date.now());const h=Math.floor(left/36e5),m=Math.floor(left%36e5/6e4),s=Math.floor(left%6e4/1e3);
+    $('timer').innerHTML='<div class="small" style="text-align:center">'+esc(S.timer.label)+'</div><div class="timer">'+(h?h+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'</div>'+
+     '<div class="row"><button class="btn" id="tmOk" style="flex:1">✓ I\'m safe</button><button class="btn ghost" id="tmMore" style="flex:1">+30 min</button></div>';
+    $('tmOk').onclick=()=>{S.timer=null;save();renderTimer();renderBrief();toast('Glad you\'re safe');};
+    $('tmMore').onclick=()=>{S.timer.due+=30*6e4;save();renderTimer();};
+  }
+}
+let alerted=false;
+function timerTick(){if(!S.timer)return;if($('v-safety').classList.contains('on'))renderTimer();
+  if(Date.now()>=S.timer.due&&!alerted){alerted=true;const d=D(),p=S.me||{lat:d.lat,lon:d.lon};
+    const msg='Pocketbook safety alert: I set a check-in for "'+S.timer.label+'" and haven\'t confirmed I\'m OK. Last known location: '+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+' near '+d.city+'. https://www.openstreetmap.org/?mlat='+p.lat.toFixed(5)+'&mlon='+p.lon.toFixed(5)+'#map=16';
+    modal('Are you OK?','<div class="timer" style="font-size:28px">Check-in time</div><div class="small" style="text-align:center;margin-bottom:10px">'+esc(S.timer.label)+'</div><button class="btn" id="aOk" style="width:100%">✓ I\'m OK</button><div class="mono" style="margin-top:10px">'+esc(msg)+'</div><div class="row" style="margin-top:8px"><a class="btn coral sm" style="text-decoration:none;flex:1;text-align:center" href="sms:'+encodeURIComponent(S.homeNum||'')+'?body='+encodeURIComponent(msg)+'">Send alert</a><button class="btn ghost sm" id="aCopy" style="flex:1">Copy alert</button></div><div class="small" style="margin-top:6px">The Android build shows this as a full-screen alarm, and the alert goes to your emergency contact by SMS.</div>');
+    $('aOk').onclick=()=>{S.timer=null;alerted=false;save();$('modal').classList.remove('on');renderTimer();renderBrief();toast('Glad you\'re safe');};
+    $('aCopy').onclick=()=>copy(msg);}}
+function fix(){const d=D();return{lat:d.lat+(Math.random()-.5)*.01,lon:d.lon+(Math.random()-.5)*.01};}
+let hereMsg='';
+$('hereBtn').onclick=()=>{const d=D(),p=fix();S.me=p;save();hereMsg='I am here: '+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+'\nNear: '+d.city+'\nMap: https://www.openstreetmap.org/?mlat='+p.lat.toFixed(5)+'&mlon='+p.lon.toFixed(5)+'#map=17\nSent '+hm(NOW(),d.tz)+' local time';$('hereTxt').textContent=hereMsg;$('hereOut').style.display='block';toast('One-off fix taken. Tracking stays off');};
+$('hereCopy').onclick=()=>copy(hereMsg);
+$('hereShow').onclick=()=>{const p=S.me;overlay('Please take me to',D().city,p.lat.toFixed(5)+', '+p.lon.toFixed(5),true);};
+$('hereQR').onclick=()=>textModal('Scan to see my location',hereMsg,true);
+let pinType='Hotel';
+$('pinType').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{pinType=c.dataset.t;$('pinType').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));});
+function dist(a,b){const R=6371e3,r=Math.PI/180;const x=Math.sin((b.lat-a.lat)*r/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin((b.lon-a.lon)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function bearing(a,b){const r=Math.PI/180;const y=Math.sin((b.lon-a.lon)*r)*Math.cos(b.lat*r);const x=Math.cos(a.lat*r)*Math.sin(b.lat*r)-Math.sin(a.lat*r)*Math.cos(b.lat*r)*Math.cos((b.lon-a.lon)*r);return(Math.atan2(y,x)/r+360)%360;}
+function renderPin(){
+  if(!S.pin){$('pinOut').textContent='No pin saved yet.';$('compass').style.display='none';$('pinDist').textContent='';return;}
+  $('pinOut').textContent=S.pin.t+' saved at '+S.pin.lat.toFixed(5)+', '+S.pin.lon.toFixed(5)+'. Stored on this device only.';$('compass').style.display='block';
+  const me=S.me||S.pin,m=dist(me,S.pin),b=bearing(me,S.pin);$('arrow').style.transform='rotate('+b+'deg)';const dirs=['N','NE','E','SE','S','SW','W','NW'];
+  $('pinDist').textContent=m<15?'You\'re here 🎉':(m>=1000?(m/1000).toFixed(2)+' km':Math.round(m)+' m')+' '+dirs[Math.round(b/45)%8]+' · ~'+Math.max(1,Math.round(m/80))+' min walk';
+}
+$('pinSet').onclick=()=>{const p=fix();S.me=p;S.pin={t:pinType,lat:p.lat,lon:p.lon};save();renderPin();toast(pinType+' pin saved');};
+$('pinMove').onclick=()=>{if(!S.pin)return toast('Save a pin first');const a=Math.random()*Math.PI*2,k=.003+Math.random()*.008;S.me={lat:S.pin.lat+Math.sin(a)*k,lon:S.pin.lon+Math.cos(a)*k};save();renderPin();};
+function renderLost(){
+  $('lost').innerHTML='<div class="small" style="font-weight:800">CARD-BLOCKING NUMBERS (SAVE BEFORE YOU GO)</div>'+S.cards.map((c,i)=>'<div class="two" style="margin-top:6px"><input data-cn="'+i+'" placeholder="Bank / card" value="'+esc(c.n)+'"><input data-cp="'+i+'" placeholder="+44 number" value="'+esc(c.p)+'"></div>'+(c.p?'<a class="mini" href="tel:'+esc(c.p.replace(/\s/g,''))+'">📞 Call '+esc(c.n||'bank')+' ('+esc(c.p)+')</a>':'')).join('')+
+   '<details style="margin-top:10px"><summary>💳 Lost or stolen card</summary><div class="li">Freeze it in your banking app or call the number above</div><div class="li">If stolen, report it to the police and get a reference for insurance</div><div class="li">Switch to your backup card, kept in a separate bag</div></details>'+
+   '<details style="margin-top:8px"><summary>🛂 Lost passport</summary><div class="li">Report it to the local police and get a written reference</div><div class="li">Apply for a UK Emergency Travel Document on <a href="https://www.gov.uk/emergency-travel-document" target="_blank" rel="noopener">GOV.UK</a></div><div class="li">A passport copy in the vault speeds this up</div><div class="li">Tell your airline and check onward entry rules</div></details>'+
+   '<details style="margin-top:8px"><summary>📱 Lost phone</summary><div class="li">From another device, use Google Find My Device to lock or erase it</div><div class="li">Call your network to block the SIM</div><div class="li">Pocketbook data lives only on the phone, so keep an encrypted export somewhere safe before you travel (Kit → Backup)</div></details>'+
+   '<button class="btn ghost sm" id="lostLog" style="margin-top:10px">Log it in the incident log</button>';
+  $('lost').querySelectorAll('input[data-cn]').forEach(x=>x.onchange=()=>{S.cards[+x.dataset.cn].n=x.value;save();renderLost();});
+  $('lost').querySelectorAll('input[data-cp]').forEach(x=>x.onchange=()=>{S.cards[+x.dataset.cp].p=x.value;save();renderLost();});
+  $('lostLog').onclick=()=>{$('inT').value='Lost / stolen item';$('inN').focus();};
+}
+function renderDelay(){
+  $('delay').innerHTML='<label class="f">Your flight<select class="in" id="dlS"><option value="uk">Leaving the UK, or on a UK airline (UK261)</option><option value="eu">Leaving the EU, or on an EU airline (EU261)</option></select></label>'+
+   '<div class="two" style="margin-top:8px"><label class="f">Distance<select class="in" id="dlD"><option value="1">Up to 1,500 km</option><option value="2">1,500–3,500 km</option><option value="3">Over 3,500 km</option></select></label><label class="f">Arrival delay (hours)<input id="dlH" type="number" value="3.5" step="0.5"></label></div>'+
+   '<label class="row small" style="gap:6px;margin-top:8px"><input type="checkbox" id="dlX" style="width:auto"> Cause was extraordinary (severe weather, ATC strike, security)</label><div id="dlOut" style="margin-top:8px"></div>';
+  const calc=()=>{const uk=$('dlS').value==='uk',b=+$('dlD').value,h=+$('dlH').value||0,x=$('dlX').checked;
+    const amt=uk?[220,350,520]:[250,400,600],sym=uk?'£':'€';const care=[2,3,4][b-1];
+    let comp;if(h<3)comp='<div class="flag-w">No compensation for arrival delays under 3 hours</div>';else if(x)comp='<div class="flag-w">Usually no compensation for extraordinary circumstances, but your right to care still applies</div>';
+    else{let v=amt[b-1];if(b===3&&h<4)v=v/2;comp='<div class="flag-g">You may be owed '+sym+v+' per passenger'+(b===3&&h<4?' (reduced 50%: 3–4h delay on a long-haul flight)':'')+'</div>';}
+    $('dlOut').innerHTML=comp+'<div class="li">Meals and refreshments once the delay passes '+care+'h, plus a hotel if you are delayed overnight</div><div class="li">After 5h you can choose a refund instead of travelling</div><div class="li">Keep boarding passes and receipts, and note what you were told and when</div><div class="small" style="margin-top:6px">Guide only. See the <a href="https://www.caa.co.uk/passengers-and-public/resolving-travel-problems/delays-and-cancellations/" target="_blank" rel="noopener">CAA guidance</a>.</div><button class="btn ghost sm" id="dlLog" style="margin-top:8px">Log delay in the incident log</button>';
+    $('dlLog').onclick=()=>{S.incidents.unshift({id:uid(),type:'Flight delay',note:h+'h arrival delay ('+(uk?'UK261':'EU261')+')',ref:'',t:NOW(),sid:D().id});save();renderIncidents();toast('Delay logged with timestamp');};};
+  ['dlS','dlD','dlH','dlX'].forEach(i=>$(i).oninput=calc);$('dlX').onchange=calc;calc();
+}
+function renderIncidents(){
+  const list=S.incidents.map(n=>{const i=sIdx(n.sid),tz=stopTz(i);return '<div class="jr"><b>'+esc(n.type)+'</b> <span class="small">'+wall(n.t,tz)+' · '+esc(i>=0?sName(S.stops[i]):'')+'</span><div>'+esc(n.note)+'</div>'+(n.ref?'<div class="small">Police / reference: '+esc(n.ref)+'</div>':'')+(photos[n.id]?'<img src="'+photos[n.id]+'" alt="">':'')+'</div>';}).join('');
+  $('incidents').innerHTML='<div class="two"><select class="in" id="inT"><option>Flight delay</option><option>Lost / stolen item</option><option>Medical</option><option>Accident</option><option>Accommodation problem</option><option>Other</option></select><input id="inR" placeholder="Police / ref no."></div>'+
+   '<textarea id="inN" rows="2" placeholder="What happened? Names, times, what you were told" style="margin-top:8px"></textarea><div class="row" style="margin-top:8px"><label class="btn ghost sm">📷 Photo<input type="file" id="inP" accept="image/*" hidden></label><button class="btn sm" id="inAdd" style="flex:1">Log with timestamp</button></div>'+
+   '<div style="margin-top:6px">'+(list||'<div class="small">Nothing logged. Write it down as it happens, because insurers ask for times and references.</div>')+'</div>'+
+   (S.incidents.length?'<button class="btn ghost sm" id="inExp" style="margin-top:8px">Create claim pack (text)</button>':'');
+  let ph=null;$('inP').onchange=e=>{const f=e.target.files[0];if(f){ph=URL.createObjectURL(f);toast('Photo attached');}};
+  $('inAdd').onclick=()=>{const note=$('inN').value.trim();if(!note)return toast('Describe what happened');const id=uid();if(ph)photos[id]=ph;S.incidents.unshift({id,type:$('inT').value,note,ref:$('inR').value.trim(),t:NOW(),sid:D().id});save();renderIncidents();toast('Logged');};
+  if($('inExp'))$('inExp').onclick=()=>textModal('Claim pack',S.incidents.map(n=>{const i=sIdx(n.sid);return wall(n.t,stopTz(i))+' · '+n.type+' · '+(i>=0?sName(S.stops[i]):'')+'\n'+n.note+(n.ref?'\nRef: '+n.ref:'');}).join('\n\n'));
+}
+$('homeSafe').onclick=()=>{S.timer=null;save();renderTimer();textModal('Home safe','Home safe 🏠 Back from '+S.stops.map(sName).join(', ')+'. Thanks for keeping an eye on me.',false,true);};
+
+// ---------- GUIDE ----------
+function renderGuide(){
+  const d=D();const need=d.plugs.indexOf('G')<0,vdiff=Math.abs(d.volt-HOME.volt)>20;
+  $('power').innerHTML='<div>'+d.plugs.map(p=>'<span class="plug'+(need?' need':'')+'">'+p+'</span>').join('')+'</div><div style="margin-top:10px;font-weight:700">'+d.volt+'V · '+d.hz+'Hz <span class="small">(UK: 230V · 50Hz, Type G)</span></div>'+
+   (need?'<div class="li no">UK plugs won\'t fit. Pack a Type '+d.plugs.join('/')+' adapter.</div>':'')+(vdiff?'<div class="li no">Lower voltage. Chargers marked "100–240V" are fine, but UK hair dryers and straighteners need a converter.</div>':'<div class="li">Same voltage as the UK, so an adapter is all you need.</div>');
+  const dr=d.drive;$('drive').innerHTML='<div class="kv"><span>Drive on the</span><span>'+dr.side+'</span></div><div class="kv"><span>Speed limits</span><span>'+esc(dr.lim)+'</span></div><div class="kv"><span>Must carry</span><span>'+esc(dr.kit)+'</span></div>'+dr.notes.map(t=>'<div class="li">'+esc(t)+'</div>').join('');
+  $('tips').innerHTML=d.tips.concat(d.etiq).map(t=>'<div class="li">'+esc(t)+'</div>').join('')+d.no.map(t=>'<div class="li no">'+esc(t)+'</div>').join('');
+  $('water').innerHTML='<div style="font-weight:700;margin-bottom:6px">💧 '+esc(d.water)+'</div><div class="small" style="font-weight:800;margin-top:8px">COMMON SCAMS</div>'+d.scams.map(t=>'<div class="li no">'+esc(t)+'</div>').join('')+'<div class="small" style="margin-top:8px">British embassy: save it from <a href="https://www.gov.uk/world/embassies" target="_blank" rel="noopener">GOV.UK</a> before you travel.</div>';
+  $('medRules').innerHTML='<div style="font-size:14px;line-height:1.5">'+esc(d.meds)+'</div><div class="small" style="margin-top:6px">Check the rules for every country on your route, including transit stops.</div>';
+  if(!d.ph.length)$('phrases').innerHTML='<div class="small">English is spoken here, so no phrase pack is needed.</div>';
+  else{$('phrases').innerHTML='<div class="small" style="margin-bottom:4px">'+d.lang+' · tap a phrase to show it full screen</div>'+d.ph.map((p,i)=>'<div class="phr" data-i="'+i+'"><div><div class="en">'+esc(p[0])+'</div><div class="lo">'+esc(p[1])+'</div><div class="ro">'+esc(p[2])+'</div></div><span style="color:var(--teal);font-weight:800">⤢</span></div>').join('');
+    $('phrases').querySelectorAll('.phr').forEach(el=>el.onclick=()=>{const p=d.ph[+el.dataset.i];overlay(p[0],p[1],p[2]);});}
+  renderMenu();$('medTxt').value=S.med||'';
+  const eu=tripCountries().some(c=>C[c].eu);
+  $('customs').innerHTML='<div class="small" style="font-weight:800">PERSONAL ALLOWANCES INTO GREAT BRITAIN</div><div class="li">Beer: 42 litres</div><div class="li">Still wine: 18 litres</div><div class="li">Spirits over 22%: 4 litres, or 9 litres of sparkling or fortified wine</div><div class="li">200 cigarettes, or the equivalent in other tobacco</div><div class="li">Other goods worth up to £390</div>'+
+   (eu?'<div class="flag-w">Bring your tax-free forms. Have them validated before you leave the EU.</div>':'')+'<div class="li no">Meat and dairy products are restricted. Check before buying food to bring home</div><div class="small" style="margin-top:6px">Confirm the current limits on <a href="https://www.gov.uk/duty-free-goods" target="_blank" rel="noopener">GOV.UK</a>.</div>';
+}
+function renderMenu(){const d=D(),q=($('menuQ').value||'').toLowerCase().trim();const r=d.menu.filter(m=>!q||m.join(' ').toLowerCase().indexOf(q)>=0);
+  $('menuList').innerHTML=r.length?r.map(m=>'<div class="exp"><span><b>'+esc(m[0])+'</b>'+(m[1]?' <span class="small">'+esc(m[1])+'</span>':'')+'</span><span class="small" style="text-align:right;max-width:55%">'+esc(m[2])+'</span></div>').join(''):'<div class="small">No match in the offline dictionary.</div>';}
+$('menuQ').oninput=renderMenu;$('medTxt').oninput=()=>{S.med=$('medTxt').value;save();};
+$('medShow').onclick=()=>{const d=D();const doc=(d.ph.find(p=>p[0]==='I need a doctor')||[0,'I need a doctor'])[1];overlay('Medical information',doc,S.med||'Add your conditions and allergies above',true);};
+
+// ---------- KIT ----------
+function renderPack(){
+  $('packTpl').innerHTML=Object.keys(PACK).map(k=>'<span class="chip'+(k===S.packTpl?' on':'')+'" data-k="'+k+'">'+k+'</span>').join('');
+  $('packTpl').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{S.packTpl=c.dataset.k;save();renderPack();});
+  const P=S.packed[S.packTpl]||(S.packed[S.packTpl]={});
+  const list=PACK[S.packTpl].map(x=>x==='Plug adapter'?'Plug adapters for the route (Type '+tripPlugs().join('/')+')':x);
+  if(tripCountries().some(c=>C[c].volt<200))list.push('Voltage converter (110V stop)');
+  if(tripCountries().some(c=>X[c].idp))list.push('International Driving Permit');
+  if(tripCountries().some(c=>C[c].eu))list.push('GHIC card');
+  $('packList').innerHTML=list.map((x,i)=>'<div class="check'+(P[i]?' done':'')+'" data-i="'+i+'"><div class="box"></div><span>'+esc(x)+'</span></div>').join('')+'<div class="small" style="margin-top:6px">'+Object.values(P).filter(Boolean).length+' of '+list.length+' packed</div>';
+  $('packList').querySelectorAll('.check').forEach(el=>el.onclick=()=>{P[el.dataset.i]=!P[el.dataset.i];save();renderPack();});
+}
+$('packReset').onclick=()=>{S.packed[S.packTpl]={};save();renderPack();toast('Template reset');};
+let vaultOpen=false,vaultDocs=[],pinBuf='';
+function renderVault(){
+  const v=$('vault');
+  if(!vaultOpen){const setting=!S.vaultPin;
+    v.innerHTML='<div style="text-align:center"><div style="font-size:28px">🔒</div><div style="font-weight:800;margin-top:4px">'+(setting?'Create a 4-digit PIN':'Enter PIN to unlock')+'</div><div class="small">Fingerprint unlock in the Android build</div><div class="pin">'+[0,1,2,3].map(i=>'<span class="'+(i<pinBuf.length?'f':'')+'"></span>').join('')+'</div><div class="keypad">'+[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>'<button '+(k===''?'style="visibility:hidden"':'')+' data-k="'+k+'">'+k+'</button>').join('')+'</div></div>';
+    v.querySelectorAll('.keypad button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k==='⌫')pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;
+      if(pinBuf.length===4){if(setting){S.vaultPin=pinBuf;save();vaultOpen=true;toast('Vault PIN set');}else if(pinBuf===S.vaultPin)vaultOpen=true;else toast('Wrong PIN');pinBuf='';}renderVault();});return;}
+  v.innerHTML='<div class="row" style="justify-content:space-between"><b>🔓 Vault unlocked</b><button class="btn sm ghost" id="vLock">Lock</button></div><div style="margin-top:6px">'+(vaultDocs.length?vaultDocs.map(x=>'<div class="vault-doc">'+(x.url?'<img src="'+x.url+'" alt="">':'<div class="ic">'+esc(x.ext)+'</div>')+'<div><b>'+esc(x.name)+'</b><div class="small">'+x.size+' · on this device only</div></div></div>').join(''):'<div class="small" style="padding:6px 0">Add your passport, insurance, licence, IDP and boarding passes.</div>')+'</div>'+
+   '<label class="btn" style="display:block;text-align:center;margin-top:8px">+ Add document<input type="file" id="vFile" accept="image/*,.pdf" multiple hidden></label><div class="small" style="margin-top:6px">The demo keeps files in memory only. The Android build encrypts them with Android Keystore and keeps them out of cloud backup.</div>';
+  $('vLock').onclick=()=>{vaultOpen=false;renderVault();};
+  $('vFile').onchange=e=>{[...e.target.files].forEach(f=>vaultDocs.push({name:f.name,ext:(f.name.split('.').pop()||'').toUpperCase(),size:(f.size/1024).toFixed(0)+' KB',url:f.type.startsWith('image/')?URL.createObjectURL(f):null}));renderVault();toast('Added to vault');};
+}
+function renderJournal(){
+  const today=S.sim||dayOf(Date.now(),D().tz);
+  $('journal').innerHTML='<div class="small">'+fmtDate(today)+' · '+esc(D().city)+'</div><textarea id="jT" rows="2" placeholder="What happened today?" style="margin-top:6px"></textarea><div class="row" style="margin-top:8px"><label class="btn ghost sm">📷 Photo<input type="file" id="jP" accept="image/*" hidden></label><label class="row small" style="gap:4px"><input type="checkbox" id="jS" style="width:auto">⭐ Highlight</label><button class="btn sm" id="jAdd" style="margin-left:auto">Save</button></div>'+
+   '<div style="margin-top:6px">'+(S.journal.map(j=>'<div class="jr">'+(j.star?'⭐ ':'')+'<b>'+fmtDate(j.d)+'</b> <span class="small">'+esc(j.place)+'</span><div>'+esc(j.t)+'</div>'+(photos[j.id]?'<img src="'+photos[j.id]+'" alt="">':'')+'</div>').join('')||'<div class="small">No entries yet. In the app, your photos from each day are suggested from local EXIF data.</div>')+'</div>';
+  let ph=null;$('jP').onchange=e=>{const f=e.target.files[0];if(f){ph=URL.createObjectURL(f);toast('Photo added');}};
+  $('jAdd').onclick=()=>{const t=$('jT').value.trim();if(!t&&!ph)return;const id=uid();if(ph)photos[id]=ph;S.journal.unshift({id,d:today,place:D().city,t,star:$('jS').checked});save();renderJournal();toast('Saved to journal');};
+}
+function renderMap(){
+  $('mapGrid').innerHTML=WORLD.map(([f,n])=>{const s=S.map[n];return'<button class="'+(s===1?'v':s===2?'b':'')+'" data-n="'+n+'"><span class="f">'+f+'</span>'+n+'</button>';}).join('');
+  $('mapGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{const n=b.dataset.n;S.map[n]=((S.map[n]||0)+1)%3;save();renderMap();});
+  const v=Object.values(S.map).filter(x=>x===1).length,bl=Object.values(S.map).filter(x=>x===2).length;$('mapStats').textContent=v+' visited · '+bl+' on the bucket list.';
+}
+$('exportBtn').onclick=()=>{const o=Object.assign({},S);delete o.vaultPin;textModal('Backup (JSON)',JSON.stringify(Object.assign({app:'Pocketbook',exported:new Date().toISOString()},o),null,1));};
+$('resetDemo').onclick=()=>{S=seed();editStop=-1;try{localStorage.removeItem('pocketbook3');}catch(e){}renderAll();toast('Demo data reset');};
+
+function renderAll(){
+  renderHeader();renderBrief();renderReminders();renderMeds();renderReturn();renderWx();
+  renderMode();renderRoute();renderSchengen();renderWallet();renderConnections();renderMeetings();renderDocs();renderReady();renderHome();
+  renderConv();renderTravellers();renderSpend();renderSettle();renderBudget();renderWrap();
+  renderSOS();$('homeNum').value=S.homeNum;renderTimer();renderPin();renderLost();renderDelay();renderIncidents();
+  renderGuide();renderPack();renderVault();renderJournal();renderMap();tick();
+}
+renderAll();setInterval(tick,15000);setInterval(timerTick,1000);
+
+})();
+</script>
+</body>
+</html>

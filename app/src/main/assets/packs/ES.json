@@ -1,0 +1,202 @@
+{
+  "code": "ES",
+  "name": "Spain",
+  "defaultCity": "Barcelona",
+  "flag": "🇪🇸",
+  "timeZone": "Europe/Madrid",
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "indicativeRatePerGbp": 1.15,
+  "plugs": [
+    "C",
+    "F"
+  ],
+  "voltage": 230,
+  "frequency": "50",
+  "exitCode": "00",
+  "callingCode": "34",
+  "lat": 41.3874,
+  "lon": 2.1686,
+  "eu": true,
+  "schengen": true,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "All emergencies",
+      "number": "112",
+      "primary": true
+    },
+    {
+      "label": "National police",
+      "number": "091",
+      "primary": false
+    },
+    {
+      "label": "Medical emergency",
+      "number": "061",
+      "primary": false
+    },
+    {
+      "label": "Local police",
+      "number": "092",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Not obligatory. Rounding up or 5–10% for good service is appreciated",
+    "Bars: leave small change",
+    "Taxis: round up"
+  ],
+  "etiquette": [
+    "Lunch around 2pm and dinner from 9pm onwards",
+    "A greeting on entering small shops is expected"
+  ],
+  "avoid": [
+    "Avoid assuming everyone speaks Spanish in Catalonia. Catalan is widely used."
+  ],
+  "water": "Tap water is safe to drink. In Barcelona the taste can be strong, so many people prefer filtered or bottled.",
+  "scams": [
+    "Pickpocketing on Las Ramblas and the metro",
+    "Distraction tricks such as a \"bird dropping\" on your clothes, or petition clipboards"
+  ],
+  "language": "Spanish",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "Hola",
+      "pronunciation": "OH-la"
+    },
+    {
+      "english": "Thank you",
+      "local": "Gracias",
+      "pronunciation": "GRA-thee-as"
+    },
+    {
+      "english": "Please",
+      "local": "Por favor",
+      "pronunciation": "por fa-BOR"
+    },
+    {
+      "english": "How much is it?",
+      "local": "¿Cuánto cuesta?",
+      "pronunciation": "KWAN-to KWES-ta?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "La cuenta, por favor",
+      "pronunciation": "la KWEN-ta, por fa-BOR"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "¿Dónde está el baño?",
+      "pronunciation": "DON-de es-TA el BA-nyo?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "Necesito un médico",
+      "pronunciation": "ne-the-SEE-to oon ME-dee-ko"
+    },
+    {
+      "english": "Help!",
+      "local": "¡Socorro!",
+      "pronunciation": "so-KO-rro!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "Gambas al ajillo",
+      "romanised": "",
+      "meaning": "Prawns in garlic and oil"
+    },
+    {
+      "term": "Pulpo a la gallega",
+      "romanised": "",
+      "meaning": "Galician-style octopus with paprika"
+    },
+    {
+      "term": "Croquetas",
+      "romanised": "",
+      "meaning": "Fried béchamel croquettes"
+    },
+    {
+      "term": "Patatas bravas",
+      "romanised": "",
+      "meaning": "Fried potatoes with spicy sauce"
+    },
+    {
+      "term": "Jamón ibérico",
+      "romanised": "",
+      "meaning": "Cured Iberian ham"
+    },
+    {
+      "term": "Pan con tomate",
+      "romanised": "",
+      "meaning": "Bread rubbed with tomato and oil"
+    },
+    {
+      "term": "Cordero",
+      "romanised": "",
+      "meaning": "Lamb"
+    },
+    {
+      "term": "Cerdo",
+      "romanised": "",
+      "meaning": "Pork"
+    },
+    {
+      "term": "Ternera",
+      "romanised": "",
+      "meaning": "Beef / veal"
+    },
+    {
+      "term": "Pescado",
+      "romanised": "",
+      "meaning": "Fish"
+    }
+  ],
+  "driving": {
+    "side": "Right",
+    "speedLimits": "50 / 90 / 120 km/h",
+    "mustCarry": "V-16 connected warning beacon (replaced triangles from 2026) and reflective vests",
+    "notes": [
+      "Barcelona, Madrid and other cities have low-emission zones (ZBE)",
+      "A UK photocard licence is accepted"
+    ]
+  },
+  "idp": "",
+  "medicines": "Carry medicines in their original packaging with a copy of the prescription. Controlled drugs need a doctor's letter.",
+  "entry": [
+    "EU Entry/Exit System: fingerprints and photo are taken at your first Schengen entry",
+    "ETIAS travel authorisation: required once launched, so check the current status before you fly"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 17,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 16,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 15,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 16,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 17,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 18,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 17,
+      "icon": "⛅"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "code": "GR",
+  "name": "Greece",
+  "defaultCity": "Chania, Crete",
+  "flag": "🇬🇷",
+  "timeZone": "Europe/Athens",
+  "currency": "EUR",
+  "currencySymbol": "€",
+  "indicativeRatePerGbp": 1.15,
+  "plugs": [
+    "C",
+    "F"
+  ],
+  "voltage": 230,
+  "frequency": "50",
+  "exitCode": "00",
+  "callingCode": "30",
+  "lat": 35.5138,
+  "lon": 24.018,
+  "eu": true,
+  "schengen": true,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "All emergencies",
+      "number": "112",
+      "primary": true
+    },
+    {
+      "label": "Police",
+      "number": "100",
+      "primary": false
+    },
+    {
+      "label": "Ambulance",
+      "number": "166",
+      "primary": false
+    },
+    {
+      "label": "Tourist police",
+      "number": "1571",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Restaurants: 5–10% for good service, left in cash",
+    "Taxis: round up to the nearest euro",
+    "Hotel porters: €1–2 per bag"
+  ],
+  "etiquette": [
+    "Dress modestly (shoulders and knees covered) in churches and monasteries",
+    "Lunch runs late (2–4pm) and dinner rarely starts before 9pm"
+  ],
+  "avoid": [
+    "Avoid the open-palm \"moutza\" gesture. It is offensive."
+  ],
+  "water": "Tap water is generally safe in cities. On many islands, locals drink bottled water, so check with your host.",
+  "scams": [
+    "Unmetered taxis at ports and airports: agree the fare or insist on the meter",
+    "Overpriced drinks at bars when invited in by a friendly stranger"
+  ],
+  "language": "Greek",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "Γειά σας",
+      "pronunciation": "Yiá sas"
+    },
+    {
+      "english": "Thank you",
+      "local": "Ευχαριστώ",
+      "pronunciation": "Efcharistó"
+    },
+    {
+      "english": "Please",
+      "local": "Παρακαλώ",
+      "pronunciation": "Parakaló"
+    },
+    {
+      "english": "How much is it?",
+      "local": "Πόσο κάνει;",
+      "pronunciation": "Póso káni?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "Τον λογαριασμό, παρακαλώ",
+      "pronunciation": "Ton logariasmó, parakaló"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "Πού είναι η τουαλέτα;",
+      "pronunciation": "Poú íne i toualéta?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "Χρειάζομαι γιατρό",
+      "pronunciation": "Chriázome yatró"
+    },
+    {
+      "english": "Help!",
+      "local": "Βοήθεια!",
+      "pronunciation": "Voíthia!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "Χωριάτικη",
+      "romanised": "Horiatiki",
+      "meaning": "Greek salad: tomato, cucumber, onion, olives, feta"
+    },
+    {
+      "term": "Ντάκος",
+      "romanised": "Dakos",
+      "meaning": "Cretan barley rusk with tomato and mizithra cheese"
+    },
+    {
+      "term": "Σουβλάκι",
+      "romanised": "Souvlaki",
+      "meaning": "Grilled meat skewers"
+    },
+    {
+      "term": "Μουσακάς",
+      "romanised": "Moussaka",
+      "meaning": "Baked aubergine, mince and béchamel"
+    },
+    {
+      "term": "Χταπόδι",
+      "romanised": "Htapodi",
+      "meaning": "Octopus"
+    },
+    {
+      "term": "Καλαμαράκια",
+      "romanised": "Kalamarakia",
+      "meaning": "Fried squid"
+    },
+    {
+      "term": "Τζατζίκι",
+      "romanised": "Tzatziki",
+      "meaning": "Yoghurt, cucumber and garlic dip"
+    },
+    {
+      "term": "Γεμιστά",
+      "romanised": "Gemista",
+      "meaning": "Stuffed tomatoes and peppers"
+    },
+    {
+      "term": "Ρακί",
+      "romanised": "Raki / Tsikoudia",
+      "meaning": "Strong Cretan grape spirit"
+    },
+    {
+      "term": "Κλέφτικο",
+      "romanised": "Kleftiko",
+      "meaning": "Slow-cooked lamb"
+    }
+  ],
+  "driving": {
+    "side": "Right",
+    "speedLimits": "50 / 90 / 130 km/h (town / open road / motorway)",
+    "mustCarry": "Warning triangle, first-aid kit and fire extinguisher",
+    "notes": [
+      "Motorway tolls are paid at booths by cash or card",
+      "A UK photocard licence is accepted. No IDP needed"
+    ]
+  },
+  "idp": "",
+  "medicines": "Carry medicines in their original packaging with a copy of the prescription. Strong painkillers and sleeping tablets should come with a doctor's letter.",
+  "entry": [
+    "EU Entry/Exit System: fingerprints and photo are taken at your first Schengen entry",
+    "ETIAS travel authorisation: required once launched, so check the current status before you fly"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 22,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 21,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 20,
+      "icon": "🌦"
+    },
+    {
+      "tempC": 19,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 21,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 22,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 20,
+      "icon": "⛅"
+    }
+  ]
+}

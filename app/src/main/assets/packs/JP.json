@@ -1,0 +1,198 @@
+{
+  "code": "JP",
+  "name": "Japan",
+  "defaultCity": "Tokyo",
+  "flag": "🇯🇵",
+  "timeZone": "Asia/Tokyo",
+  "currency": "JPY",
+  "currencySymbol": "¥",
+  "indicativeRatePerGbp": 200,
+  "plugs": [
+    "A",
+    "B"
+  ],
+  "voltage": 100,
+  "frequency": "50/60",
+  "exitCode": "010",
+  "callingCode": "81",
+  "lat": 35.6762,
+  "lon": 139.6503,
+  "eu": false,
+  "schengen": false,
+  "passportMonthsOnArrival": 0,
+  "emergency": [
+    {
+      "label": "Police",
+      "number": "110",
+      "primary": true
+    },
+    {
+      "label": "Ambulance / Fire",
+      "number": "119",
+      "primary": true
+    },
+    {
+      "label": "Japan Visitor Hotline",
+      "number": "050-3816-2787",
+      "primary": false
+    }
+  ],
+  "tipping": [
+    "Tipping is not customary and can cause confusion",
+    "Service is included. Simply say thank you"
+  ],
+  "etiquette": [
+    "Remove shoes where you see a step up or slippers at the entrance",
+    "Stand on the left of escalators in Tokyo",
+    "Keep phone calls off trains"
+  ],
+  "avoid": [
+    "Do not stick chopsticks upright in rice",
+    "Avoid eating while walking in busy areas"
+  ],
+  "water": "Tap water is safe to drink everywhere.",
+  "scams": [
+    "Touts in Kabukicho and Roppongi steering you to bars with inflated bills"
+  ],
+  "language": "Japanese",
+  "phrases": [
+    {
+      "english": "Hello",
+      "local": "こんにちは",
+      "pronunciation": "Konnichiwa"
+    },
+    {
+      "english": "Thank you",
+      "local": "ありがとうございます",
+      "pronunciation": "Arigatō gozaimasu"
+    },
+    {
+      "english": "Please",
+      "local": "お願いします",
+      "pronunciation": "Onegaishimasu"
+    },
+    {
+      "english": "How much is it?",
+      "local": "いくらですか？",
+      "pronunciation": "Ikura desu ka?"
+    },
+    {
+      "english": "The bill, please",
+      "local": "お会計お願いします",
+      "pronunciation": "Okaikei onegaishimasu"
+    },
+    {
+      "english": "Where is the toilet?",
+      "local": "トイレはどこですか？",
+      "pronunciation": "Toire wa doko desu ka?"
+    },
+    {
+      "english": "I need a doctor",
+      "local": "医者が必要です",
+      "pronunciation": "Isha ga hitsuyō desu"
+    },
+    {
+      "english": "Help!",
+      "local": "助けて！",
+      "pronunciation": "Tasukete!"
+    }
+  ],
+  "menu": [
+    {
+      "term": "鶏",
+      "romanised": "Tori",
+      "meaning": "Chicken"
+    },
+    {
+      "term": "豚",
+      "romanised": "Buta",
+      "meaning": "Pork"
+    },
+    {
+      "term": "牛",
+      "romanised": "Gyū",
+      "meaning": "Beef"
+    },
+    {
+      "term": "魚",
+      "romanised": "Sakana",
+      "meaning": "Fish"
+    },
+    {
+      "term": "海老",
+      "romanised": "Ebi",
+      "meaning": "Prawn"
+    },
+    {
+      "term": "卵",
+      "romanised": "Tamago",
+      "meaning": "Egg"
+    },
+    {
+      "term": "定食",
+      "romanised": "Teishoku",
+      "meaning": "Set meal"
+    },
+    {
+      "term": "丼",
+      "romanised": "Don",
+      "meaning": "Rice bowl"
+    },
+    {
+      "term": "刺身",
+      "romanised": "Sashimi",
+      "meaning": "Sliced raw fish"
+    },
+    {
+      "term": "お冷",
+      "romanised": "Ohiya",
+      "meaning": "Free iced water"
+    }
+  ],
+  "driving": {
+    "side": "Left",
+    "speedLimits": "40–60 km/h in town, 100–120 km/h on expressways",
+    "mustCarry": "Nothing extra required",
+    "notes": [
+      "You must carry a 1949 International Driving Permit with your UK licence",
+      "Rent an ETC card with the car to pay expressway tolls",
+      "Zero tolerance on drink-driving. Passengers who knowingly ride with a drinking driver are also liable"
+    ]
+  },
+  "idp": "Required (1949 IDP)",
+  "medicines": "Strict rules. Some cold and allergy medicines containing pseudoephedrine, and codeine above set levels, are banned. Bringing more than one month's supply of prescription medicine needs an import certificate (Yakkan Shoumei). Check the Japanese embassy guidance before you pack.",
+  "entry": [
+    "UK visitors can stay up to 90 days without a visa",
+    "Visit Japan Web QR codes speed up immigration and customs"
+  ],
+  "sampleWeather": [
+    {
+      "tempC": 14,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 13,
+      "icon": "⛅"
+    },
+    {
+      "tempC": 12,
+      "icon": "☁️"
+    },
+    {
+      "tempC": 14,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 15,
+      "icon": "☀️"
+    },
+    {
+      "tempC": 13,
+      "icon": "🌧"
+    },
+    {
+      "tempC": 12,
+      "icon": "⛅"
+    }
+  ]
+}
