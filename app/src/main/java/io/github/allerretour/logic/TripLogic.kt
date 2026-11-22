@@ -1,8 +1,8 @@
-package io.github.pocketbook.logic
+package io.github.allerretour.logic
 
-import io.github.pocketbook.data.CountryPack
-import io.github.pocketbook.data.Home
-import io.github.pocketbook.data.Stop
+import io.github.allerretour.data.CountryPack
+import io.github.allerretour.data.Home
+import io.github.allerretour.data.Stop
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

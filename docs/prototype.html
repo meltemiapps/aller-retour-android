@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pocketbook — Travel Companion Demo</title>
+<title>Aller-Retour — Travel Companion Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -188,7 +188,7 @@ label.f{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
 <div class="wrap">
   <aside class="side">
     <span class="tag">Interactive prototype · Android-style</span>
-    <h1>Pocketbook<br>Zero-tracking travel companion</h1>
+    <h1>Aller-Retour<br>Zero-tracking travel companion</h1>
     <p>Covers the whole journey: planning, travelling, changes of plan and getting home safely. Everything stays on the device, with no account, cloud or analytics.</p>
     <ul>
       <li><b>Today</b> has the daily brief, next event, reminders, medication times, return countdown and the dual clock.</li>
@@ -741,7 +741,7 @@ function renderWallet(){
    '<label class="f">Departing from / stay at<select class="in" id="bS">'+stopOpts(S.stops[S.active].id,true)+'</select></label>'+
    '<div class="two"><label class="f">Start (local)<input type="datetime-local" id="bSt"></label><label class="f">End (local)<input type="datetime-local" id="bEn"></label></div>'+
    '<label class="f">Free cancellation until<input type="datetime-local" id="bC"></label><input id="bA" placeholder="Address (for the taxi card)"><input id="bP" placeholder="Plan B if this goes wrong (optional)">'+
-   '<button class="btn" id="bAdd">Save booking</button><div class="small">In the Android build you can share a confirmation email or PDF to Pocketbook and it fills this in on the device.</div></div></details>';
+   '<button class="btn" id="bAdd">Save booking</button><div class="small">In the Android build you can share a confirmation email or PDF to Aller-Retour and it fills this in on the device.</div></div></details>';
   $('wallet').querySelectorAll('[data-taxi]').forEach(x=>x.onclick=()=>{const b=S.bookings.find(y=>y.id===x.dataset.taxi);overlay('Please take me to',b.addr,b.title,true);});
   $('wallet').querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>{S.bookings=S.bookings.filter(y=>y.id!==x.dataset.del);save();renderAll();toast('Booking removed');});
   $('wallet').querySelectorAll('[data-pb]').forEach(x=>x.onclick=()=>{const b=S.bookings.find(y=>y.id===x.dataset.pb);
@@ -898,7 +898,7 @@ function renderDial(){
 $('homeNum').oninput=()=>{S.homeNum=$('homeNum').value;save();renderDial();};
 function renderTimer(){
   if(!S.timer){
-    $('timer').innerHTML='<div class="small">Going somewhere alone or late? Set a time to check in. If you don\'t confirm, Pocketbook prompts you to send a prepared alert with your last location. It runs on the phone only.</div>'+
+    $('timer').innerHTML='<div class="small">Going somewhere alone or late? Set a time to check in. If you don\'t confirm, Aller-Retour prompts you to send a prepared alert with your last location. It runs on the phone only.</div>'+
      '<input id="tmL" placeholder="Where are you going? e.g. Evening hike to Seitan Limania" style="margin-top:8px"><div class="chips" id="tmQ"><span class="chip" data-m="30">30 min</span><span class="chip" data-m="60">1 hour</span><span class="chip" data-m="120">2 hours</span><span class="chip" data-m="180">3 hours</span><span class="chip" data-m="0.17">Demo: 10 sec</span></div>';
     $('tmQ').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{S.timer={due:Date.now()+(+c.dataset.m)*6e4,label:$('tmL').value.trim()||'Out and about',set:Date.now()};save();renderTimer();toast('Check-in timer started');});
   } else {
@@ -912,7 +912,7 @@ function renderTimer(){
 let alerted=false;
 function timerTick(){if(!S.timer)return;if($('v-safety').classList.contains('on'))renderTimer();
   if(Date.now()>=S.timer.due&&!alerted){alerted=true;const d=D(),p=S.me||{lat:d.lat,lon:d.lon};
-    const msg='Pocketbook safety alert: I set a check-in for "'+S.timer.label+'" and haven\'t confirmed I\'m OK. Last known location: '+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+' near '+d.city+'. https://www.openstreetmap.org/?mlat='+p.lat.toFixed(5)+'&mlon='+p.lon.toFixed(5)+'#map=16';
+    const msg='Aller-Retour safety alert: I set a check-in for "'+S.timer.label+'" and haven\'t confirmed I\'m OK. Last known location: '+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+' near '+d.city+'. https://www.openstreetmap.org/?mlat='+p.lat.toFixed(5)+'&mlon='+p.lon.toFixed(5)+'#map=16';
     modal('Are you OK?','<div class="timer" style="font-size:28px">Check-in time</div><div class="small" style="text-align:center;margin-bottom:10px">'+esc(S.timer.label)+'</div><button class="btn" id="aOk" style="width:100%">✓ I\'m OK</button><div class="mono" style="margin-top:10px">'+esc(msg)+'</div><div class="row" style="margin-top:8px"><a class="btn coral sm" style="text-decoration:none;flex:1;text-align:center" href="sms:'+encodeURIComponent(S.homeNum||'')+'?body='+encodeURIComponent(msg)+'">Send alert</a><button class="btn ghost sm" id="aCopy" style="flex:1">Copy alert</button></div><div class="small" style="margin-top:6px">The Android build shows this as a full-screen alarm, and the alert goes to your emergency contact by SMS.</div>');
     $('aOk').onclick=()=>{S.timer=null;alerted=false;save();$('modal').classList.remove('on');renderTimer();renderBrief();toast('Glad you\'re safe');};
     $('aCopy').onclick=()=>copy(msg);}}
@@ -938,7 +938,7 @@ function renderLost(){
   $('lost').innerHTML='<div class="small" style="font-weight:800">CARD-BLOCKING NUMBERS (SAVE BEFORE YOU GO)</div>'+S.cards.map((c,i)=>'<div class="two" style="margin-top:6px"><input data-cn="'+i+'" placeholder="Bank / card" value="'+esc(c.n)+'"><input data-cp="'+i+'" placeholder="+44 number" value="'+esc(c.p)+'"></div>'+(c.p?'<a class="mini" href="tel:'+esc(c.p.replace(/\s/g,''))+'">📞 Call '+esc(c.n||'bank')+' ('+esc(c.p)+')</a>':'')).join('')+
    '<details style="margin-top:10px"><summary>💳 Lost or stolen card</summary><div class="li">Freeze it in your banking app or call the number above</div><div class="li">If stolen, report it to the police and get a reference for insurance</div><div class="li">Switch to your backup card, kept in a separate bag</div></details>'+
    '<details style="margin-top:8px"><summary>🛂 Lost passport</summary><div class="li">Report it to the local police and get a written reference</div><div class="li">Apply for a UK Emergency Travel Document on <a href="https://www.gov.uk/emergency-travel-document" target="_blank" rel="noopener">GOV.UK</a></div><div class="li">A passport copy in the vault speeds this up</div><div class="li">Tell your airline and check onward entry rules</div></details>'+
-   '<details style="margin-top:8px"><summary>📱 Lost phone</summary><div class="li">From another device, use Google Find My Device to lock or erase it</div><div class="li">Call your network to block the SIM</div><div class="li">Pocketbook data lives only on the phone, so keep an encrypted export somewhere safe before you travel (Kit → Backup)</div></details>'+
+   '<details style="margin-top:8px"><summary>📱 Lost phone</summary><div class="li">From another device, use Google Find My Device to lock or erase it</div><div class="li">Call your network to block the SIM</div><div class="li">Aller-Retour data lives only on the phone, so keep an encrypted export somewhere safe before you travel (Kit → Backup)</div></details>'+
    '<button class="btn ghost sm" id="lostLog" style="margin-top:10px">Log it in the incident log</button>';
   $('lost').querySelectorAll('input[data-cn]').forEach(x=>x.onchange=()=>{S.cards[+x.dataset.cn].n=x.value;save();renderLost();});
   $('lost').querySelectorAll('input[data-cp]').forEach(x=>x.onchange=()=>{S.cards[+x.dataset.cp].p=x.value;save();renderLost();});
@@ -1027,7 +1027,7 @@ function renderMap(){
   $('mapGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{const n=b.dataset.n;S.map[n]=((S.map[n]||0)+1)%3;save();renderMap();});
   const v=Object.values(S.map).filter(x=>x===1).length,bl=Object.values(S.map).filter(x=>x===2).length;$('mapStats').textContent=v+' visited · '+bl+' on the bucket list.';
 }
-$('exportBtn').onclick=()=>{const o=Object.assign({},S);delete o.vaultPin;textModal('Backup (JSON)',JSON.stringify(Object.assign({app:'Pocketbook',exported:new Date().toISOString()},o),null,1));};
+$('exportBtn').onclick=()=>{const o=Object.assign({},S);delete o.vaultPin;textModal('Backup (JSON)',JSON.stringify(Object.assign({app:'Aller-Retour',exported:new Date().toISOString()},o),null,1));};
 $('resetDemo').onclick=()=>{S=seed();editStop=-1;try{localStorage.removeItem('pocketbook3');}catch(e){}renderAll();toast('Demo data reset');};
 
 function renderAll(){

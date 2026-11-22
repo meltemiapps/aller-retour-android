@@ -1,6 +1,6 @@
 # Roadmap
 
-Pocketbook stays free, open source and offline. A feature that needs a server ships only as an **opt-in** with no identifiers, or not at all.
+Aller-Retour stays free, open source and offline. A feature that needs a server ships only as an **opt-in** with no identifiers, or not at all.
 
 ## Version 1 (this release)
 Multi-stop route with extend-my-stay, Schengen counter, passport checks, readiness list, converter with your own rate, multi-currency expenses, emergency numbers, Call Home, "I am here", Drop a pin with compass, country guide, phrase cards, menu decoder, medical card, packing lists, backup and restore.

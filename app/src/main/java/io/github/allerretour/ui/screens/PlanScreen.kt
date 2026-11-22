@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
-package io.github.pocketbook.ui.screens
+package io.github.allerretour.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,19 +45,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.pocketbook.AppViewModel
-import io.github.pocketbook.data.MAX_STOPS
-import io.github.pocketbook.data.Stop
-import io.github.pocketbook.logic.TripLogic
-import io.github.pocketbook.ui.Bullet
-import io.github.pocketbook.ui.CheckRow
-import io.github.pocketbook.ui.Flag
-import io.github.pocketbook.ui.InfoCard
-import io.github.pocketbook.ui.KeyValue
-import io.github.pocketbook.ui.SectionTitle
-import io.github.pocketbook.ui.Small
-import io.github.pocketbook.ui.Tone
-import io.github.pocketbook.ui.pickDate
+import io.github.allerretour.AppViewModel
+import io.github.allerretour.data.MAX_STOPS
+import io.github.allerretour.data.Stop
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.Bullet
+import io.github.allerretour.ui.CheckRow
+import io.github.allerretour.ui.Flag
+import io.github.allerretour.ui.InfoCard
+import io.github.allerretour.ui.KeyValue
+import io.github.allerretour.ui.SectionTitle
+import io.github.allerretour.ui.Small
+import io.github.allerretour.ui.Tone
+import io.github.allerretour.ui.pickDate
 import java.time.LocalDate
 
 @Composable

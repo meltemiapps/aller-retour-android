@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 
-package io.github.pocketbook.ui.screens
+package io.github.allerretour.ui.screens
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,16 +31,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.pocketbook.AppViewModel
-import io.github.pocketbook.BuildConfig
-import io.github.pocketbook.logic.TripLogic
-import io.github.pocketbook.ui.Bullet
-import io.github.pocketbook.ui.CheckRow
-import io.github.pocketbook.ui.InfoCard
-import io.github.pocketbook.ui.SectionTitle
-import io.github.pocketbook.ui.Small
-import io.github.pocketbook.ui.toast
-import io.github.pocketbook.ui.supportsWallpaperColours
+import io.github.allerretour.AppViewModel
+import io.github.allerretour.BuildConfig
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.Bullet
+import io.github.allerretour.ui.CheckRow
+import io.github.allerretour.ui.InfoCard
+import io.github.allerretour.ui.SectionTitle
+import io.github.allerretour.ui.Small
+import io.github.allerretour.ui.toast
+import io.github.allerretour.ui.supportsWallpaperColours
 
 @Composable
 fun KitScreen(vm: AppViewModel) {
@@ -56,7 +56,7 @@ fun KitScreen(vm: AppViewModel) {
     val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             val text = runCatching { context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() } }.getOrNull()
-            toast(context, if (text != null && vm.importJson(text)) "Backup restored" else "That file isn't a Pocketbook backup")
+            toast(context, if (text != null && vm.importJson(text)) "Backup restored" else "That file isn't a Aller-Retour backup")
         }
     }
 
@@ -83,8 +83,8 @@ fun KitScreen(vm: AppViewModel) {
                     Column(Modifier.weight(1f)) {
                         Text("Use wallpaper colours", fontWeight = FontWeight.Bold)
                         Small(
-                            if (supportsWallpaperColours) "Matches your phone's colours. Turn off to use Pocketbook blue."
-                            else "Needs Android 12 or later. This phone uses Pocketbook blue.",
+                            if (supportsWallpaperColours) "Matches your phone's colours. Turn off to use Aller-Retour blue."
+                            else "Needs Android 12 or later. This phone uses Aller-Retour blue.",
                         )
                     }
                     Switch(
@@ -100,7 +100,7 @@ fun KitScreen(vm: AppViewModel) {
             InfoCard {
                 Text("Everything is stored on this phone only", fontWeight = FontWeight.Bold)
                 Small("It is not included in Google backups. If you lose or reset your phone, only an exported backup can bring it back.")
-                Button(onClick = { exporter.launch("pocketbook-backup.json") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) { Text("Export backup") }
+                Button(onClick = { exporter.launch("aller-retour-backup.json") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) { Text("Export backup") }
                 OutlinedButton(onClick = { importer.launch(arrayOf("application/json", "text/plain", "*/*")) }, modifier = Modifier.fillMaxWidth()) { Text("Restore from backup") }
                 Small("The backup is a plain JSON file you can read yourself. Keep it somewhere safe.", Modifier.padding(top = 6.dp))
                 TextButton(onClick = { confirmErase = true }) { Text("Erase all my data") }
@@ -118,7 +118,7 @@ fun KitScreen(vm: AppViewModel) {
         item {
             SectionTitle("About")
             InfoCard {
-                Text("Pocketbook ${BuildConfig.VERSION_NAME}", fontWeight = FontWeight.Bold)
+                Text("Aller-Retour ${BuildConfig.VERSION_NAME}", fontWeight = FontWeight.Bold)
                 Small("Free and open source under the GNU GPL v3. Country information is a summary for guidance only. Always check official sources such as GOV.UK foreign travel advice.")
             }
         }

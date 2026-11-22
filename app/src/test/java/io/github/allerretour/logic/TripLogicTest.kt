@@ -1,8 +1,8 @@
-package io.github.pocketbook.logic
+package io.github.allerretour.logic
 
-import io.github.pocketbook.data.CountryPack
-import io.github.pocketbook.data.Driving
-import io.github.pocketbook.data.Stop
+import io.github.allerretour.data.CountryPack
+import io.github.allerretour.data.Driving
+import io.github.allerretour.data.Stop
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

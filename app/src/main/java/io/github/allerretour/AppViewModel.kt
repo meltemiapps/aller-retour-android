@@ -1,17 +1,17 @@
-package io.github.pocketbook
+package io.github.allerretour
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.pocketbook.data.AppState
-import io.github.pocketbook.data.CountryPack
-import io.github.pocketbook.data.Expense
-import io.github.pocketbook.data.MAX_STOPS
-import io.github.pocketbook.data.PackRepository
-import io.github.pocketbook.data.Pin
-import io.github.pocketbook.data.StateStore
-import io.github.pocketbook.data.Stop
-import io.github.pocketbook.logic.TripLogic
+import io.github.allerretour.data.AppState
+import io.github.allerretour.data.CountryPack
+import io.github.allerretour.data.Expense
+import io.github.allerretour.data.MAX_STOPS
+import io.github.allerretour.data.PackRepository
+import io.github.allerretour.data.Pin
+import io.github.allerretour.data.StateStore
+import io.github.allerretour.data.Stop
+import io.github.allerretour.logic.TripLogic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

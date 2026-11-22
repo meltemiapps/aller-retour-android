@@ -1,4 +1,4 @@
-package io.github.pocketbook.ui
+package io.github.allerretour.ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -55,7 +55,7 @@ val supportsWallpaperColours: Boolean get() = Build.VERSION.SDK_INT >= Build.VER
  * Falls back to the brand palette on older phones, or when [useWallpaperColours] is off.
  */
 @Composable
-fun PocketbookTheme(useWallpaperColours: Boolean = true, content: @Composable () -> Unit) {
+fun AllerRetourTheme(useWallpaperColours: Boolean = true, content: @Composable () -> Unit) {
     val dark = isSystemInDarkTheme()
     val context = LocalContext.current
     val scheme = when {

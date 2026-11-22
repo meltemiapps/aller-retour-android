@@ -1,4 +1,4 @@
-package io.github.pocketbook.ui
+package io.github.allerretour.ui
 
 import android.Manifest
 import android.annotation.SuppressLint

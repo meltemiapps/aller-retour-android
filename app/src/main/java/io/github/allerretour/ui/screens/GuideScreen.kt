@@ -1,4 +1,4 @@
-package io.github.pocketbook.ui.screens
+package io.github.allerretour.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,17 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.pocketbook.AppViewModel
-import io.github.pocketbook.data.Home
-import io.github.pocketbook.data.Phrase
-import io.github.pocketbook.ui.BadBg
-import io.github.pocketbook.ui.BadFg
-import io.github.pocketbook.ui.Bullet
-import io.github.pocketbook.ui.InfoCard
-import io.github.pocketbook.ui.KeyValue
-import io.github.pocketbook.ui.SectionTitle
-import io.github.pocketbook.ui.ShowCard
-import io.github.pocketbook.ui.Small
+import io.github.allerretour.AppViewModel
+import io.github.allerretour.data.Home
+import io.github.allerretour.data.Phrase
+import io.github.allerretour.ui.BadBg
+import io.github.allerretour.ui.BadFg
+import io.github.allerretour.ui.Bullet
+import io.github.allerretour.ui.InfoCard
+import io.github.allerretour.ui.KeyValue
+import io.github.allerretour.ui.SectionTitle
+import io.github.allerretour.ui.ShowCard
+import io.github.allerretour.ui.Small
 import kotlin.math.abs
 
 @Composable

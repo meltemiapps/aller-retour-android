@@ -2,7 +2,7 @@
 
 _Last updated: 22 November 2026_
 
-**Pocketbook collects no data.** We, the developers, never see anything you enter.
+**Aller-Retour collects no data.** We, the developers, never see anything you enter.
 
 ## What the app stores
 

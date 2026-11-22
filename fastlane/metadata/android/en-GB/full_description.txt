@@ -1,4 +1,4 @@
-Pocketbook is a free, open-source travel companion that works completely offline and never tracks you.
+Aller-Retour is a free, open-source travel companion that works completely offline and never tracks you.
 
 <b>No internet permission.</b> The app cannot connect to the network, so nothing you enter can leave your phone unless you share it yourself. No account, no ads, no analytics, no Google Play Services.
 

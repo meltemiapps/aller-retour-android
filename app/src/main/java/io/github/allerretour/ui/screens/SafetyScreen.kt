@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 
-package io.github.pocketbook.ui.screens
+package io.github.allerretour.ui.screens
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -51,22 +51,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.pocketbook.AppViewModel
-import io.github.pocketbook.logic.TripLogic
-import io.github.pocketbook.ui.Coral
-import io.github.pocketbook.ui.Flag
-import io.github.pocketbook.ui.InfoCard
-import io.github.pocketbook.ui.SectionTitle
-import io.github.pocketbook.ui.ShowCard
-import io.github.pocketbook.ui.Small
-import io.github.pocketbook.ui.Tone
-import io.github.pocketbook.ui.dial
-import io.github.pocketbook.ui.hasLocationPermission
-import io.github.pocketbook.ui.oneOffLocation
-import io.github.pocketbook.ui.rememberHeading
-import io.github.pocketbook.ui.rememberLiveLocation
-import io.github.pocketbook.ui.shareText
-import io.github.pocketbook.ui.toast
+import io.github.allerretour.AppViewModel
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.Coral
+import io.github.allerretour.ui.Flag
+import io.github.allerretour.ui.InfoCard
+import io.github.allerretour.ui.SectionTitle
+import io.github.allerretour.ui.ShowCard
+import io.github.allerretour.ui.Small
+import io.github.allerretour.ui.Tone
+import io.github.allerretour.ui.dial
+import io.github.allerretour.ui.hasLocationPermission
+import io.github.allerretour.ui.oneOffLocation
+import io.github.allerretour.ui.rememberHeading
+import io.github.allerretour.ui.rememberLiveLocation
+import io.github.allerretour.ui.shareText
+import io.github.allerretour.ui.toast
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

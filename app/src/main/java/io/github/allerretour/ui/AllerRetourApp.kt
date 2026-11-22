@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 
-package io.github.pocketbook.ui
+package io.github.allerretour.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,14 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.pocketbook.AppViewModel
-import io.github.pocketbook.logic.TripLogic
-import io.github.pocketbook.ui.screens.GuideScreen
-import io.github.pocketbook.ui.screens.KitScreen
-import io.github.pocketbook.ui.screens.MoneyScreen
-import io.github.pocketbook.ui.screens.PlanScreen
-import io.github.pocketbook.ui.screens.SafetyScreen
-import io.github.pocketbook.ui.screens.TodayScreen
+import io.github.allerretour.AppViewModel
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.screens.GuideScreen
+import io.github.allerretour.ui.screens.KitScreen
+import io.github.allerretour.ui.screens.MoneyScreen
+import io.github.allerretour.ui.screens.PlanScreen
+import io.github.allerretour.ui.screens.SafetyScreen
+import io.github.allerretour.ui.screens.TodayScreen
 import java.time.Instant
 import kotlin.math.roundToInt
 
@@ -63,7 +63,7 @@ private data class Tab(val label: String, val icon: String)
 private val tabs = listOf(Tab("Today", "🕑"), Tab("Plan", "🗺"), Tab("Money", "💷"), Tab("Safety", "🛡"), Tab("Guide", "📖"), Tab("Kit", "🎒"))
 
 @Composable
-fun PocketbookApp(vm: AppViewModel = viewModel()) {
+fun AllerRetourApp(vm: AppViewModel = viewModel()) {
     val s by vm.state.collectAsStateWithLifecycle()
     if (!s.onboarded || s.stops.isEmpty()) {
         Onboarding(vm)
@@ -148,7 +148,7 @@ private fun Onboarding(vm: AppViewModel) {
             .verticalScroll(rememberScrollState()).padding(20.dp),
     ) {
         Text("🧭", fontSize = 48.sp)
-        Text("Pocketbook", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold)
+        Text("Aller-Retour", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold)
         Text("Your travel companion that stays in your pocket.", style = MaterialTheme.typography.bodyLarge)
         Spacer(Modifier.height(14.dp))
         InfoCard {

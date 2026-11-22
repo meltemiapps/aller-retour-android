@@ -1,4 +1,4 @@
-package io.github.pocketbook
+package io.github.allerretour
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.pocketbook.ui.PocketbookApp
-import io.github.pocketbook.ui.PocketbookTheme
+import io.github.allerretour.ui.AllerRetourApp
+import io.github.allerretour.ui.AllerRetourTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val vm: AppViewModel = viewModel()
             val s by vm.state.collectAsStateWithLifecycle()
-            PocketbookTheme(useWallpaperColours = s.useWallpaperColours) { PocketbookApp(vm) }
+            AllerRetourTheme(useWallpaperColours = s.useWallpaperColours) { AllerRetourApp(vm) }
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.github.pocketbook.data
+package io.github.allerretour.data
 
 import kotlinx.serialization.Serializable
 

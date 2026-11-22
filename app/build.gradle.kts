@@ -6,27 +6,27 @@ plugins {
 }
 
 android {
-    namespace = "io.github.pocketbook"
+    namespace = "io.github.allerretour"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "io.github.pocketbook"
+        applicationId = "io.github.allerretour"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0"
     }
 
     // Optional release signing: only used when the four environment variables are set
     // (see .github/workflows/release.yml). Without them, release builds are unsigned.
-    val keystorePath = System.getenv("POCKETBOOK_KEYSTORE")
+    val keystorePath = System.getenv("ALLERRETOUR_KEYSTORE")
     if (keystorePath != null) {
         signingConfigs {
             create("release") {
                 storeFile = file(keystorePath)
-                storePassword = System.getenv("POCKETBOOK_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("POCKETBOOK_KEY_ALIAS")
-                keyPassword = System.getenv("POCKETBOOK_KEY_PASSWORD")
+                storePassword = System.getenv("ALLERRETOUR_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("ALLERRETOUR_KEY_ALIAS")
+                keyPassword = System.getenv("ALLERRETOUR_KEY_PASSWORD")
             }
         }
     }

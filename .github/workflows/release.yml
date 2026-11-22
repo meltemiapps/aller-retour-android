@@ -27,16 +27,16 @@ jobs:
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
-            echo "POCKETBOOK_KEYSTORE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "ALLERRETOUR_KEYSTORE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
           else
             echo "::warning::No signing secrets set. The release APK will be unsigned."
           fi
 
       - name: Build release APK
         env:
-          POCKETBOOK_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          POCKETBOOK_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          POCKETBOOK_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALLERRETOUR_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          ALLERRETOUR_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          ALLERRETOUR_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon testReleaseUnitTest assembleRelease

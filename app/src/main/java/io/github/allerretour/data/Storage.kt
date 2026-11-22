@@ -1,4 +1,4 @@
-package io.github.pocketbook.data
+package io.github.allerretour.data
 
 import android.content.Context
 import kotlinx.serialization.json.Json
@@ -29,13 +29,13 @@ class PackRepository(context: Context) {
  * deleted by Android when the app is uninstalled.
  */
 class StateStore(context: Context) {
-    private val file = File(context.filesDir, "pocketbook-state.json")
+    private val file = File(context.filesDir, "aller-retour-state.json")
 
     fun load(): AppState = try {
         if (file.exists()) AppJson.decodeFromString(AppState.serializer(), file.readText()) else AppState()
     } catch (e: Exception) {
         // Keep a copy of an unreadable file rather than silently losing it.
-        runCatching { file.copyTo(File(file.parentFile, "pocketbook-state.corrupt.json"), overwrite = true) }
+        runCatching { file.copyTo(File(file.parentFile, "aller-retour-state.corrupt.json"), overwrite = true) }
         AppState()
     }
 

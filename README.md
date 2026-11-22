@@ -1,10 +1,8 @@
-# Pocketbook
+# Aller-Retour
 
 **A free, open-source travel companion for Android that never tracks you.**
 
-Pocketbook helps you prepare for a trip, find your way around while you're there and get home safely. It has no account, no ads, no analytics and **no internet permission**: the app cannot send your data anywhere, because Android does not let it connect to the network.
-
-> **Working name.** "PocketBook" is an existing e-reader brand. Choose a distinct name before publishing to Google Play or F-Droid. The name lives in `app/src/main/res/values/strings.xml`.
+Aller-Retour helps you prepare for a trip, find your way around while you're there and get home safely. It has no account, no ads, no analytics and **no internet permission**: the app cannot send your data anywhere, because Android does not let it connect to the network.
 
 ## Version 1 features
 
@@ -24,7 +22,7 @@ Country packs in Version 1 cover Greece, Spain, Italy, France, the United States
 - **No `INTERNET` permission.** It is removed in the manifest and CI fails the build if it ever comes back.
 - **No Google Play Services**, so the app suits de-Googled phones and F-Droid. Location uses Android's own `LocationManager`.
 - **Location only on demand**: when you tap *Get my location*, *Save pin here* or *Guide me back*. Never in the background.
-- **Colours follow your wallpaper** on Android 12 and later, with Pocketbook blue as the fallback on older phones and as an option in Kit.
+- **Colours follow your wallpaper** on Android 12 and later, with Aller-Retour blue as the fallback on older phones and as an option in Kit.
 - **Storage stays on the phone**: one JSON file in app-private storage, excluded from Google cloud backup and device transfer.
 - **You control exports**: backups are plain JSON files that you save wherever you choose.
 - Calls open your phone's dialler, and sharing uses Android's share sheet, so you see everything before it leaves the phone.
@@ -48,7 +46,7 @@ Every push runs `.github/workflows/build.yml`. It runs the unit tests, builds a 
 
 ### Releasing
 
-1. Create a signing key once: `keytool -genkeypair -v -keystore release.jks -keyalg RSA -keysize 4096 -validity 10000 -alias pocketbook`
+1. Create a signing key once: `keytool -genkeypair -v -keystore release.jks -keyalg RSA -keysize 4096 -validity 10000 -alias allerretour`
 2. Add repository secrets: `KEYSTORE_BASE64` (output of `base64 -w0 release.jks`), `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
 3. Bump `versionCode` and `versionName` in `app/build.gradle.kts`, then push a tag: `git tag v1.0.0 && git push --tags`.
 
@@ -74,4 +72,4 @@ Country information is a summary for guidance only. Entry rules, medicine rules,
 
 ## Licence
 
-GNU General Public License v3.0. See [LICENSE](LICENSE). You may use, study, share and modify Pocketbook. If you distribute a modified version, it must also be free and open source under the same licence.
+GNU General Public License v3.0. See [LICENSE](LICENSE). You may use, study, share and modify Aller-Retour. If you distribute a modified version, it must also be free and open source under the same licence.
