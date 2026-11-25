@@ -13,8 +13,8 @@ android {
         applicationId = "uk.co.meltemiapps.allerretour"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.1"
     }
 
     // Optional release signing: only used when the four environment variables are set

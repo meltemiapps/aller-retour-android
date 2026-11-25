@@ -113,6 +113,15 @@ data class AppState(
     val schengenDaysAlreadyUsed: Int = 0,
     val medicalNote: String = "",
     val passportExpiry: String = "",
+    /** Optional dates for reminders, ISO yyyy-MM-dd. */
+    val insuranceEnds: String = "",
+    val ghicExpiry: String = "",
+    /** Outbound flight, local date-time yyyy-MM-ddTHH:mm. */
+    val flightDeparture: String = "",
+    val medsTime: String = "08:00",
+    val safeTime: String = "21:00",
+    /** Reminder switches by [io.github.allerretour.logic.ReminderKind] name. Missing = the kind's default. */
+    val reminders: Map<String, Boolean> = emptyMap(),
     val pin: Pin? = null,
     val onboarded: Boolean = false,
     /** Use the phone's wallpaper colours where supported (Android 12+). On by default. */

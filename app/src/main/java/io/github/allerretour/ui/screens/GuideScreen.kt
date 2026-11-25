@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package io.github.allerretour.ui.screens
 
 import androidx.compose.foundation.background
@@ -30,6 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.allerretour.AppViewModel
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.dial
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material3.FilterChip
+import androidx.compose.ui.platform.LocalContext
 import io.github.allerretour.data.Home
 import io.github.allerretour.data.Phrase
 import io.github.allerretour.ui.BadBg
@@ -45,13 +52,64 @@ import kotlin.math.abs
 @Composable
 fun GuideScreen(vm: AppViewModel) {
     val s by vm.state.collectAsStateWithLifecycle()
-    val p = vm.activePack(s)
+    val tripCodes = TripLogic.tripCountries(s.stops)
+    var code by remember { mutableStateOf<String?>(null) }
+    val p = vm.packs[code?.takeIf { it in tripCodes } ?: vm.activePack(s).code]
+    var section by remember { mutableStateOf("All") }
+    fun show(vararg names: String) = section == "All" || section in names
     var shown by remember { mutableStateOf<Phrase?>(null) }
+    val context = LocalContext.current
     var medical by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
 
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)) {
         item {
+            if (tripCodes.size > 1) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 8.dp)) {
+                    tripCodes.forEach { c ->
+                        val cp = vm.packs[c]
+                        FilterChip(selected = p.code == c, onClick = { code = c; query = "" }, label = { Text("${cp.flag} ${cp.name}") })
+                    }
+                }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
+                listOf("All", "Essentials", "Entry", "Money", "Customs", "Driving", "Health", "Phrases", "Menu").forEach { n ->
+                    FilterChip(selected = section == n, onClick = { section = n }, label = { Text(n) })
+                }
+            }
+        }
+        if (show("Essentials")) item {
+            SectionTitle("Emergency · ${p.name}")
+            InfoCard {
+                p.emergency.forEach { e ->
+                    Row(Modifier.fillMaxWidth().clickable { dial(context, "tel:${e.number}") }.padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(e.label, Modifier.weight(1f))
+                        Text(e.number, fontWeight = FontWeight.ExtraBold, fontSize = 18.sp, color = if (e.primary) BadFg else MaterialTheme.colorScheme.primary)
+                    }
+                }
+            }
+        }
+        if (show("Entry")) item {
+            SectionTitle("Entry & documents")
+            InfoCard {
+                Text(
+                    if (p.schengen) "Schengen country: your passport must be under 10 years old on entry and valid for 3 months after you leave the Schengen area."
+                    else if (p.passportMonthsOnArrival > 0) "Your passport needs at least ${p.passportMonthsOnArrival} months left on arrival."
+                    else "Check the passport validity rules before you travel.",
+                    fontWeight = FontWeight.SemiBold,
+                )
+                p.entry.forEach { Bullet(it) }
+                if (p.idp.isNotBlank()) Bullet("International Driving Permit ${p.idp.lowercase()}")
+            }
+        }
+        if (show("Money")) item {
+            SectionTitle("Money & tipping")
+            InfoCard {
+                Text("${p.currency} · indicative £1 = ${p.currencySymbol}${"%.2f".format(p.indicativeRatePerGbp)}", fontWeight = FontWeight.Bold)
+                p.tipping.forEach { Bullet(it) }
+            }
+        }
+        if (show("Essentials")) item {
             SectionTitle("Power · ${p.name}")
             InfoCard {
                 val needAdapter = "G" !in p.plugs
@@ -70,7 +128,7 @@ fun GuideScreen(vm: AppViewModel) {
                 else Bullet("Same voltage as the UK, so an adapter is all you need.")
             }
         }
-        item {
+        if (show("Driving")) item {
             SectionTitle("Driving")
             InfoCard {
                 KeyValue("Drive on the", p.driving.side)
@@ -79,14 +137,14 @@ fun GuideScreen(vm: AppViewModel) {
                 p.driving.notes.forEach { Bullet(it) }
             }
         }
-        item {
-            SectionTitle("Tipping & etiquette")
+        if (show("Customs")) item {
+            SectionTitle("Etiquette")
             InfoCard {
-                (p.tipping + p.etiquette).forEach { Bullet(it) }
+                p.etiquette.forEach { Bullet(it) }
                 p.avoid.forEach { Bullet(it, warn = true) }
             }
         }
-        item {
+        if (show("Essentials", "Customs")) item {
             SectionTitle("Water & safety")
             InfoCard {
                 Text("💧 ${p.water}", fontWeight = FontWeight.SemiBold)
@@ -95,14 +153,14 @@ fun GuideScreen(vm: AppViewModel) {
                 Small("Save the nearest British embassy from GOV.UK before you travel.", Modifier.padding(top = 8.dp))
             }
         }
-        item {
+        if (show("Health")) item {
             SectionTitle("Medicines")
             InfoCard {
                 Text(p.medicines, style = MaterialTheme.typography.bodyMedium)
                 Small("Check the rules for every country on your route, including transit stops.", Modifier.padding(top = 6.dp))
             }
         }
-        item {
+        if (show("Phrases")) item {
             SectionTitle("Phrase cards · ${p.language}")
             InfoCard {
                 if (p.phrases.isEmpty()) Small("English is spoken here, so no phrase pack is needed.")
@@ -119,7 +177,7 @@ fun GuideScreen(vm: AppViewModel) {
                 }
             }
         }
-        item {
+        if (show("Menu")) item {
             SectionTitle("Menu decoder")
             InfoCard {
                 OutlinedTextField(query, { query = it }, label = { Text("Type a word from the menu") }, singleLine = true, modifier = Modifier.fillMaxWidth())
@@ -137,7 +195,7 @@ fun GuideScreen(vm: AppViewModel) {
                 }
             }
         }
-        item {
+        if (show("Health")) item {
             SectionTitle("Medical card")
             InfoCard {
                 var note by remember(s.medicalNote) { mutableStateOf(s.medicalNote) }

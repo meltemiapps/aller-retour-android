@@ -42,23 +42,24 @@ import io.github.allerretour.ui.Small
 import io.github.allerretour.ui.toast
 import io.github.allerretour.ui.supportsWallpaperColours
 
+import android.Manifest
+import android.app.TimePickerDialog
+import android.os.Build
+import androidx.compose.material3.MaterialTheme
+import io.github.allerretour.logic.ReminderKind
+import io.github.allerretour.logic.ReminderPlan
+import io.github.allerretour.ui.Flag
+import io.github.allerretour.ui.Tone
+import io.github.allerretour.ui.pickDate
+import java.time.LocalDate
+import java.time.LocalTime
+
 @Composable
 fun KitScreen(vm: AppViewModel) {
     val s by vm.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var confirmErase by remember { mutableStateOf(false) }
-
-    val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
-        if (uri != null) runCatching {
-            context.contentResolver.openOutputStream(uri)?.use { it.write(vm.exportJson().toByteArray()) }
-        }.onSuccess { toast(context, "Backup saved") }.onFailure { toast(context, "Couldn't save the backup") }
-    }
-    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            val text = runCatching { context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() } }.getOrNull()
-            toast(context, if (text != null && vm.importJson(text)) "Backup restored" else "That file isn't a Aller-Retour backup")
-        }
-    }
+    val packs = vm.packs.packs
+    val askNotify = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)) {
         item {
@@ -77,58 +78,79 @@ fun KitScreen(vm: AppViewModel) {
             }
         }
         item {
-            SectionTitle("Appearance")
+            val items = TripLogic.readinessItems(s.stops, packs)
+            val done = items.count { it.first in s.readiness }
+            SectionTitle("Ready to go · $done of ${items.size}")
+            InfoCard { items.forEach { (k, label) -> CheckRow(label, k in s.readiness) { vm.toggleReady(k) } } }
+        }
+        item {
+            SectionTitle("Passport & entry")
             InfoCard {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f)) {
-                        Text("Use wallpaper colours", fontWeight = FontWeight.Bold)
-                        Small(
-                            if (supportsWallpaperColours) "Matches your phone's colours. Turn off to use Aller-Retour blue."
-                            else "Needs Android 12 or later. This phone uses Aller-Retour blue.",
-                        )
+                OutlinedButton(onClick = { pickDate(context, s.passportExpiry) { vm.setPassportExpiry(it) } }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (s.passportExpiry.isBlank()) "Set passport expiry date" else "Passport expires ${TripLogic.pretty(s.passportExpiry)}")
+                }
+                TripLogic.passportChecks(TripLogic.date(s.passportExpiry), s.stops, packs).forEach { (ok, msg) ->
+                    Flag((if (ok) "✓ " else "⚠ ") + msg, if (ok) Tone.GOOD else Tone.BAD)
+                }
+                val countries = TripLogic.tripCountries(s.stops).map { vm.packs[it] }
+                countries.filter { it.idp.isNotBlank() }.takeIf { it.isNotEmpty() }?.let { list ->
+                    Small("DRIVING PERMITS", Modifier.padding(top = 10.dp))
+                    list.forEach { Bullet("${it.flag} ${it.name}: International Driving Permit ${it.idp.lowercase()}") }
+                }
+                countries.forEach { c ->
+                    if (c.entry.isNotEmpty()) {
+                        Text("${c.flag} ${c.name}", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 10.dp))
+                        c.entry.forEach { Bullet(it) }
                     }
-                    Switch(
-                        checked = s.useWallpaperColours && supportsWallpaperColours,
-                        onCheckedChange = { vm.setWallpaperColours(it) },
-                        enabled = supportsWallpaperColours,
-                    )
+                }
+                Small("Many countries need 6 months left on arrival. Schengen needs 3 months after you leave and a passport issued in the last 10 years. Entry rules change: confirm on GOV.UK foreign travel advice.", Modifier.padding(top = 8.dp))
+            }
+        }
+        item {
+            val planned = ReminderPlan.plan(s, packs).associateBy { it.kind }
+            val onCount = ReminderKind.entries.count { ReminderPlan.isOn(s, it) }
+            SectionTitle("Reminders · $onCount of ${ReminderKind.entries.size} on")
+            InfoCard {
+                Small("All optional. Set on this phone only; nothing is sent anywhere.")
+                ReminderKind.entries.forEach { k ->
+                    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(k.title, fontWeight = FontWeight.SemiBold)
+                            planned[k]?.let { Small(ReminderPlan.whenLine(it)) }
+                        }
+                        Switch(checked = ReminderPlan.isOn(s, k), onCheckedChange = { on ->
+                            if (on && Build.VERSION.SDK_INT >= 33) askNotify.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            vm.setReminder(k, on)
+                        })
+                    }
+                }
+                val flight = ReminderPlan.flight(s)
+                OutlinedButton(onClick = {
+                    val start = flight?.toLocalDate()?.toString() ?: TripLogic.tripStart(s.stops)?.toString() ?: LocalDate.now().toString()
+                    pickDate(context, start) { d ->
+                        val t = flight?.toLocalTime() ?: LocalTime.of(10, 0)
+                        TimePickerDialog(context, { _, h, m -> vm.setFlight("${d}T%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
+                    }
+                }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                    Text(if (flight == null) "Set outbound flight time" else "Flight ${TripLogic.pretty(flight.toLocalDate().toString())}, %02d:%02d".format(flight.hour, flight.minute))
+                }
+                OutlinedButton(onClick = { pickDate(context, s.insuranceEnds) { vm.setInsuranceEnds(it) } }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (s.insuranceEnds.isBlank()) "Set travel insurance end date" else "Insurance ends ${TripLogic.pretty(s.insuranceEnds)}")
+                }
+                OutlinedButton(onClick = { pickDate(context, s.ghicExpiry) { vm.setGhicExpiry(it) } }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (s.ghicExpiry.isBlank()) "Set GHIC card expiry date" else "GHIC expires ${TripLogic.pretty(s.ghicExpiry)}")
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(onClick = {
+                        val t = ReminderPlan.time(s.medsTime, LocalTime.of(8, 0))
+                        TimePickerDialog(context, { _, h, m -> vm.setMedsTime("%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
+                    }, modifier = Modifier.weight(1f)) { Text("Meds ${s.medsTime}") }
+                    OutlinedButton(onClick = {
+                        val t = ReminderPlan.time(s.safeTime, LocalTime.of(21, 0))
+                        TimePickerDialog(context, { _, h, m -> vm.setSafeTime("%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
+                    }, modifier = Modifier.weight(1f)) { Text("Safe check-in ${s.safeTime}") }
                 }
             }
         }
-        item {
-            SectionTitle("Your data")
-            InfoCard {
-                Text("Everything is stored on this phone only", fontWeight = FontWeight.Bold)
-                Small("It is not included in Google backups. If you lose or reset your phone, only an exported backup can bring it back.")
-                Button(onClick = { exporter.launch("aller-retour-backup.json") }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) { Text("Export backup") }
-                OutlinedButton(onClick = { importer.launch(arrayOf("application/json", "text/plain", "*/*")) }, modifier = Modifier.fillMaxWidth()) { Text("Restore from backup") }
-                Small("The backup is a plain JSON file you can read yourself. Keep it somewhere safe.", Modifier.padding(top = 6.dp))
-                TextButton(onClick = { confirmErase = true }) { Text("Erase all my data") }
-            }
-        }
-        item {
-            SectionTitle("Privacy")
-            InfoCard {
-                Bullet("No internet permission: the app cannot connect to anything")
-                Bullet("No accounts, ads, analytics or crash reporting")
-                Bullet("Location is used only when you tap a location button, and never in the background")
-                Bullet("Calls open your own dialler, and sharing uses Android's share sheet. You see everything before it is sent")
-            }
-        }
-        item {
-            SectionTitle("About")
-            InfoCard {
-                Text("Aller-Retour ${BuildConfig.VERSION_NAME}", fontWeight = FontWeight.Bold)
-                Small("Free and open source under the GNU GPL v3. Country information is a summary for guidance only. Always check official sources such as GOV.UK foreign travel advice.")
-            }
-        }
     }
-
-    if (confirmErase) AlertDialog(
-        onDismissRequest = { confirmErase = false },
-        title = { Text("Erase everything?") },
-        text = { Text("Your route, spending, checklists and settings will be deleted from this phone. This can't be undone unless you have exported a backup.") },
-        confirmButton = { TextButton(onClick = { vm.eraseEverything(); confirmErase = false }) { Text("Erase") } },
-        dismissButton = { TextButton(onClick = { confirmErase = false }) { Text("Cancel") } },
-    )
 }

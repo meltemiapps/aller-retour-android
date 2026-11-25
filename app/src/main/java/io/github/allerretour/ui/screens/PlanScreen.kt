@@ -126,36 +126,6 @@ fun PlanScreen(vm: AppViewModel) {
             }
         }
 
-        item {
-            SectionTitle("Documents & entry")
-            InfoCard {
-                OutlinedButton(onClick = { pickDate(context, s.passportExpiry) { vm.setPassportExpiry(it) } }, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (s.passportExpiry.isBlank()) "Set passport expiry date" else "Passport expires ${TripLogic.pretty(s.passportExpiry)}")
-                }
-                TripLogic.passportChecks(TripLogic.date(s.passportExpiry), s.stops, packs).forEach { (ok, msg) ->
-                    Flag((if (ok) "✓ " else "⚠ ") + msg, if (ok) Tone.GOOD else Tone.BAD)
-                }
-                val countries = TripLogic.tripCountries(s.stops).map { vm.packs[it] }
-                countries.filter { it.idp.isNotBlank() }.takeIf { it.isNotEmpty() }?.let { list ->
-                    Small("DRIVING PERMITS", Modifier.padding(top = 10.dp))
-                    list.forEach { Bullet("${it.flag} ${it.name}: International Driving Permit ${it.idp.lowercase()}") }
-                }
-                countries.forEach { c ->
-                    if (c.entry.isNotEmpty()) {
-                        Text("${c.flag} ${c.name}", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 10.dp))
-                        c.entry.forEach { Bullet(it) }
-                    }
-                }
-                Small("Entry rules change. Always confirm on GOV.UK foreign travel advice before you book.", Modifier.padding(top = 8.dp))
-            }
-        }
-
-        item {
-            val items = TripLogic.readinessItems(s.stops, packs)
-            val done = items.count { it.first in s.readiness }
-            SectionTitle("Ready to go? · $done of ${items.size}")
-            InfoCard { items.forEach { (k, label) -> CheckRow(label, k in s.readiness) { vm.toggleReady(k) } } }
-        }
     }
 
     if (adding) StopDialog(vm, null, -1, onDismiss = { adding = false })

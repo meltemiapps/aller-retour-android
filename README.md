@@ -4,6 +4,10 @@
 
 Aller-Retour helps you prepare for a trip, find your way around while you're there and get home safely. It has no account, no ads, no analytics and **no internet permission**: the app cannot send your data anywhere, because Android does not let it connect to the network.
 
+## Reminders (1.1)
+
+Optional local reminders: passport expiry (9 and 6 months before), online check-in, leaving for the airport, packing, moving on to the next stop, Schengen days, travel insurance, GHIC expiry, daily medication and a daily "I'm safe" nudge. They use Android's AlarmManager and notifications on the phone itself (permissions: POST_NOTIFICATIONS, RECEIVE_BOOT_COMPLETED). Still no internet permission.
+
 ## Version 1 features
 
 | Tab | What it does |

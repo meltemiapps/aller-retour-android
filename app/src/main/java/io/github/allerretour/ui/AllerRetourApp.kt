@@ -40,6 +40,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -103,6 +105,7 @@ private fun TripHeader(vm: AppViewModel) {
     val s by vm.state.collectAsStateWithLifecycle()
     val pack = vm.activePack(s)
     var open by remember { mutableStateOf(false) }
+    var about by remember { mutableStateOf(false) }
     val diff = TripLogic.hoursVsUk(pack.timeZone, Instant.now())
     val diffText = when {
         diff == 0.0 -> "Same time as UK"
@@ -123,6 +126,13 @@ private fun TripHeader(vm: AppViewModel) {
             }
             Text("${pack.currency} · Plugs ${pack.plugs.joinToString("/")} · $diffText", color = MaterialTheme.colorScheme.onPrimary.copy(alpha = .85f), fontSize = 12.sp)
         }
+        Text(
+            "ⓘ", color = MaterialTheme.colorScheme.onPrimary, fontSize = 22.sp, fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 4.dp, end = 4.dp)
+                .semantics { contentDescription = "Settings and about" }
+                .clickable { about = true }.padding(10.dp),
+        )
+        if (about) AboutDialog(vm) { about = false }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             s.stops.forEachIndexed { i, st ->
                 val p = vm.packs[st.country]

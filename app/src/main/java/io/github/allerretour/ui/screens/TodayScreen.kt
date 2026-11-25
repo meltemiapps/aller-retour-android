@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.allerretour.AppViewModel
 import io.github.allerretour.data.Home
 import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.logic.ReminderPlan
 import io.github.allerretour.ui.Flag
 import io.github.allerretour.ui.InfoCard
 import io.github.allerretour.ui.KeyValue
@@ -64,7 +65,7 @@ fun TodayScreen(vm: AppViewModel) {
                         val days = ChronoUnit.DAYS.between(today, start)
                         Text("Trip starts in $days day${if (days == 1L) "" else "s"}", style = MaterialTheme.typography.titleMedium, modifier = Modifier.fillMaxWidth())
                         LinearProgressIndicator(progress = { if (readyItems.isEmpty()) 0f else readyDone / readyItems.size.toFloat() }, modifier = Modifier.fillMaxWidth())
-                        Small("$readyDone of ${readyItems.size} pre-departure checks done (Plan tab)")
+                        Small("$readyDone of ${readyItems.size} pre-departure checks done (Kit tab)")
                     }
                     end != null && today.isAfter(end) -> Flag("Trip complete. Welcome home!", Tone.GOOD)
                     else -> {
@@ -81,6 +82,19 @@ fun TodayScreen(vm: AppViewModel) {
                 }
                 TripLogic.sunTimes(pack.lat, pack.lon, today)?.let { (rise, set) ->
                     KeyValue("Sunrise · sunset (${vm.stopName(vm.activeStop(s))})", "${rise.atZone(zone).format(hhmm)} · ${set.atZone(zone).format(hhmm)}")
+                }
+            }
+        }
+        item {
+            val upcoming = ReminderPlan.upcoming(s, vm.packs.packs)
+            SectionTitle("Coming up")
+            InfoCard {
+                if (upcoming.isEmpty()) Small("No reminders scheduled. Turn some on in Kit.")
+                upcoming.forEach { r ->
+                    Column(Modifier.padding(vertical = 4.dp)) {
+                        Text(r.kind.title, fontWeight = FontWeight.Bold)
+                        Small(ReminderPlan.whenLine(r))
+                    }
                 }
             }
         }

@@ -3,6 +3,8 @@ package io.github.allerretour
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.allerretour.logic.ReminderKind
+import io.github.allerretour.notify.ReminderScheduler
 import io.github.allerretour.data.AppState
 import io.github.allerretour.data.CountryPack
 import io.github.allerretour.data.Expense
@@ -23,6 +25,7 @@ import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 
 class AppViewModel(app: Application) : AndroidViewModel(app) {
+    init { runCatching { ReminderScheduler.ensureChannel(app) } }
 
     val packs = PackRepository(app)
     private val store = StateStore(app)
@@ -35,7 +38,16 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         _state.update(f)
         val snapshot = _state.value
         viewModelScope.launch(Dispatchers.IO) { saveLock.withLock { store.save(snapshot) } }
+        runCatching { ReminderScheduler.reschedule(getApplication(), snapshot, packs.packs) }
     }
+
+    // ---------- Reminders (local notifications only) ----------
+    fun setReminder(kind: ReminderKind, on: Boolean) = change { it.copy(reminders = it.reminders + (kind.name to on)) }
+    fun setFlight(isoLocalDateTime: String) = change { it.copy(flightDeparture = isoLocalDateTime) }
+    fun setInsuranceEnds(d: String) = change { it.copy(insuranceEnds = d) }
+    fun setGhicExpiry(d: String) = change { it.copy(ghicExpiry = d) }
+    fun setMedsTime(t: String) = change { it.copy(medsTime = t) }
+    fun setSafeTime(t: String) = change { it.copy(safeTime = t) }
 
     private fun newId() = UUID.randomUUID().toString().take(8)
 

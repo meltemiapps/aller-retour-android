@@ -241,7 +241,11 @@ object TripLogic {
                 out += (!expiry.isBefore(need)) to "${p.name}: ${p.passportMonthsOnArrival} months' validity on arrival (${need.format(shortDate)})"
             }
         }
-        tripEnd(stops)?.let { end -> out += (!expiry.isBefore(end)) to "Valid until you return home" }
+        tripEnd(stops)?.let { end ->
+            out += (!expiry.isBefore(end)) to "Valid until you return home"
+            val six = end.plusMonths(6)
+            out += (!expiry.isBefore(six)) to "6 months left after you get home (${six.format(shortDate)}), as many countries require"
+        }
         return out
     }
 }
