@@ -105,6 +105,7 @@ fun AboutDialog(vm: AppViewModel, onDismiss: () -> Unit) {
                 InfoCard {
                     Text("Aller-Retour ${BuildConfig.VERSION_NAME}", fontWeight = FontWeight.Bold)
                     Small("Free and open source under the GNU GPL v3. Country information is a summary for guidance only. Always check official sources such as GOV.UK foreign travel advice.")
+                    Small("Source code: github.com/meltemiapps/aller-retour-android", Modifier.padding(top = 6.dp))
                 }
             }
         }
