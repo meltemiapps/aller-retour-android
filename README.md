@@ -50,11 +50,13 @@ Every push runs `.github/workflows/build.yml`. It runs the unit tests, builds a 
 
 ### Releasing
 
-1. Create a signing key once: `keytool -genkeypair -v -keystore release.jks -keyalg RSA -keysize 4096 -validity 10000 -alias allerretour`
-2. Add repository secrets: `KEYSTORE_BASE64` (output of `base64 -w0 release.jks`), `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
-3. Bump `versionCode` and `versionName` in `app/build.gradle.kts`, then push a tag: `git tag v1.0.0 && git push --tags`.
+CI never signs anything and needs no secrets. Build signed releases on your own machine:
 
-The release workflow builds a signed APK and attaches it to a GitHub Release. Keep `release.jks` safe and backed up: you need the same key for every update.
+1. Create a signing key once: `keytool -genkeypair -v -keystore release.jks -keyalg RSA -keysize 4096 -validity 10000 -alias allerretour`. Keep it outside this repo, safe and backed up: you need the same key for every update.
+2. Bump `versionCode` and `versionName` in `app/build.gradle.kts`.
+3. Set `ALLERRETOUR_KEYSTORE` (path to `release.jks`), `ALLERRETOUR_KEYSTORE_PASSWORD`, `ALLERRETOUR_KEY_ALIAS` and `ALLERRETOUR_KEY_PASSWORD` in your shell, then run `./gradlew assembleRelease` (or `bundleRelease` for Google Play).
+
+Without those variables the release build is unsigned.
 
 ## Project layout
 

@@ -17,8 +17,8 @@ android {
         versionName = "1.1"
     }
 
-    // Optional release signing: only used when the four environment variables are set
-    // (see .github/workflows/release.yml). Without them, release builds are unsigned.
+    // Optional release signing for local builds: only used when the four environment variables
+    // are set (see README > Releasing). CI never signs. Without them, release builds are unsigned.
     val keystorePath = System.getenv("ALLERRETOUR_KEYSTORE")
     if (keystorePath != null) {
         signingConfigs {
