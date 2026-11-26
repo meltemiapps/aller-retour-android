@@ -10,14 +10,17 @@ Aller-Retour is a free, open-source travel companion that works completely offli
 • Entry rules, driving permits and a readiness checklist
 
 <b>On the trip</b>
-• Daily brief with sunrise and sunset
-• Local and UK clocks with a "good time to call home?" check
+• Today: where you are, sunset, time difference, quick convert and what's coming up
 • Currency converter using your own rate, and spending in each country's currency with a total in pounds
 • Emergency numbers and one-tap Call Home with the correct dialling codes
-• "I am here" location to share or show a taxi driver
-• Drop a pin at your hotel or car, with a compass to guide you back
+• "I am here" location as text, ready to read out or send
+• Drop a pin at your hotel or car, then see how far it is and which way
+• Optional reminders, set on the phone only
 
 <b>Country guide</b>
-Plugs and voltage, driving rules, tipping and etiquette, tap water, common scams, medicine rules, phrase cards in large text, a menu decoder and a medical card.
+Safety and emergencies, plugs and voltage, driving rules, tipping and etiquette, tap water, common scams, medicine rules, phrase cards in large text, a menu decoder and a medical card.
+
+<b>Looks the way you like</b>
+Glass cards over a choice of backgrounds (sky, sunset, olive grove, night harbour) or one of your own photos, which stays on your phone.
 
 Country packs: Greece, Spain, Italy, France, United States, Japan and Thailand. Designed for travellers from the UK.

@@ -6,13 +6,13 @@ _Last updated: 22 November 2026_
 
 ## What the app stores
 
-Your route, spending, checklists, saved pin, home phone number and medical note are stored in a single file in the app's private storage on your phone. Other apps cannot read it. It is excluded from Google cloud backup and device-to-device transfer, and Android deletes it when you uninstall the app.
+Your route, spending, checklists, saved pin, home phone number and medical note are stored in a single file in the app's private storage on your phone. If you choose one of your photos as the background, a copy is kept in the same private storage. Other apps cannot read it. It is excluded from Google cloud backup and device-to-device transfer, and Android deletes it when you uninstall the app.
 
 ## What the app can access
 
 | Access | When | Why |
 |---|---|---|
-| Location (precise or approximate) | Only after you tap *Get my location*, *Save pin here* or *Guide me back*, and only while that feature is in use | To show your coordinates and guide you back to a pin |
+| Location (precise or approximate) | Only after you tap *Show where I am*, *Pin this spot* or *Update*, one reading at a time | To show your coordinates, save a pin and show how far away it is |
 | Compass sensor | Only while *Guide me back* is on | To point the arrow |
 | Internet | **Never.** The app has no internet permission | — |
 

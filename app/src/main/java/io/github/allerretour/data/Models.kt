@@ -124,8 +124,10 @@ data class AppState(
     val reminders: Map<String, Boolean> = emptyMap(),
     val pin: Pin? = null,
     val onboarded: Boolean = false,
-    /** Use the phone's wallpaper colours where supported (Android 12+). On by default. */
-    val useWallpaperColours: Boolean = true,
+    /** Card style: "Clear" or "Tinted". Same names as the iPhone app. */
+    val glass: String = "Clear",
+    /** Background scene: "Sky", "Sunset", "Olive", "Harbour" or "Photo" (the user's own photo, kept in app storage). */
+    val backdrop: String = "Sky",
 )
 
 const val MAX_STOPS = 10

@@ -1,156 +1,170 @@
-@file:OptIn(ExperimentalLayoutApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
-
 package io.github.allerretour.ui.screens
 
+import android.Manifest
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.Switch
-import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.allerretour.AppViewModel
-import io.github.allerretour.BuildConfig
-import io.github.allerretour.logic.TripLogic
-import io.github.allerretour.ui.Bullet
-import io.github.allerretour.ui.CheckRow
-import io.github.allerretour.ui.InfoCard
-import io.github.allerretour.ui.SectionTitle
-import io.github.allerretour.ui.Small
-import io.github.allerretour.ui.toast
-import io.github.allerretour.ui.supportsWallpaperColours
-
-import android.Manifest
-import android.app.TimePickerDialog
-import android.os.Build
-import androidx.compose.material3.MaterialTheme
 import io.github.allerretour.logic.ReminderKind
 import io.github.allerretour.logic.ReminderPlan
-import io.github.allerretour.ui.Flag
-import io.github.allerretour.ui.Tone
+import io.github.allerretour.logic.TripLogic
+import io.github.allerretour.ui.Brand
+import io.github.allerretour.ui.CheckRow
+import io.github.allerretour.ui.Field
+import io.github.allerretour.ui.Footnote
+import io.github.allerretour.ui.GlassCard
+import io.github.allerretour.ui.Inset
+import io.github.allerretour.ui.LabeledRow
+import io.github.allerretour.ui.Progress
+import io.github.allerretour.ui.Screen
+import io.github.allerretour.ui.Segmented
+import io.github.allerretour.ui.Sub
+import io.github.allerretour.ui.ToggleRow
+import io.github.allerretour.ui.ValuePill
 import io.github.allerretour.ui.pickDate
+import io.github.allerretour.ui.pickTime
+import io.github.allerretour.ui.secondary
 import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
 fun KitScreen(vm: AppViewModel) {
     val s by vm.state.collectAsStateWithLifecycle()
-    val context = LocalContext.current
     val packs = vm.packs.packs
-    val askNotify = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val list = TripLogic.packingList(s.packTemplate, s.stops, packs)
+    val packed = s.packed[s.packTemplate].orEmpty()
+    val packedCount = packed.count { it < list.size }
+    val ready = TripLogic.readinessItems(s.stops, packs)
 
-    LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)) {
-        item {
-            SectionTitle("Packing list")
-            InfoCard {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    TripLogic.packingTemplates.keys.forEach { t -> FilterChip(selected = s.packTemplate == t, onClick = { vm.setPackTemplate(t) }, label = { Text(t) }) }
-                }
-                val list = TripLogic.packingList(s.packTemplate, s.stops, vm.packs.packs)
-                val done = s.packed[s.packTemplate].orEmpty()
-                list.forEachIndexed { i, item -> CheckRow(item, i in done) { vm.togglePacked(i) } }
-                Row(Modifier.fillMaxWidth()) {
-                    Small("${done.count { it < list.size }} of ${list.size} packed", Modifier.weight(1f).padding(top = 14.dp))
-                    TextButton(onClick = { vm.resetPacked() }) { Text("Reset for next trip") }
-                }
-            }
+    Screen("Kit") {
+        GlassCard(title = "Packing list", trailing = "$packedCount of ${list.size} packed") {
+            Segmented(TripLogic.packingTemplates.keys.toList(), s.packTemplate, { it }) { vm.setPackTemplate(it) }
+            Progress(packedCount / list.size.coerceAtLeast(1).toFloat())
+            list.forEachIndexed { i, item -> CheckRow(item, i in packed) { vm.togglePacked(i) } }
         }
-        item {
-            val items = TripLogic.readinessItems(s.stops, packs)
-            val done = items.count { it.first in s.readiness }
-            SectionTitle("Ready to go · $done of ${items.size}")
-            InfoCard { items.forEach { (k, label) -> CheckRow(label, k in s.readiness) { vm.toggleReady(k) } } }
+        GlassCard(title = "Ready to go", trailing = "${ready.count { it.first in s.readiness }} of ${ready.size} done") {
+            ready.forEach { (key, label) -> CheckRow(label, key in s.readiness, round = false) { vm.toggleReady(key) } }
         }
-        item {
-            SectionTitle("Passport & entry")
-            InfoCard {
-                OutlinedButton(onClick = { pickDate(context, s.passportExpiry) { vm.setPassportExpiry(it) } }, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (s.passportExpiry.isBlank()) "Set passport expiry date" else "Passport expires ${TripLogic.pretty(s.passportExpiry)}")
-                }
-                TripLogic.passportChecks(TripLogic.date(s.passportExpiry), s.stops, packs).forEach { (ok, msg) ->
-                    Flag((if (ok) "✓ " else "⚠ ") + msg, if (ok) Tone.GOOD else Tone.BAD)
-                }
-                val countries = TripLogic.tripCountries(s.stops).map { vm.packs[it] }
-                countries.filter { it.idp.isNotBlank() }.takeIf { it.isNotEmpty() }?.let { list ->
-                    Small("DRIVING PERMITS", Modifier.padding(top = 10.dp))
-                    list.forEach { Bullet("${it.flag} ${it.name}: International Driving Permit ${it.idp.lowercase()}") }
-                }
-                countries.forEach { c ->
-                    if (c.entry.isNotEmpty()) {
-                        Text("${c.flag} ${c.name}", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 10.dp))
-                        c.entry.forEach { Bullet(it) }
-                    }
-                }
-                Small("Many countries need 6 months left on arrival. Schengen needs 3 months after you leave and a passport issued in the last 10 years. Entry rules change: confirm on GOV.UK foreign travel advice.", Modifier.padding(top = 8.dp))
-            }
-        }
-        item {
-            val planned = ReminderPlan.plan(s, packs).associateBy { it.kind }
-            val onCount = ReminderKind.entries.count { ReminderPlan.isOn(s, it) }
-            SectionTitle("Reminders · $onCount of ${ReminderKind.entries.size} on")
-            InfoCard {
-                Small("All optional. Set on this phone only; nothing is sent anywhere.")
-                ReminderKind.entries.forEach { k ->
-                    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text(k.title, fontWeight = FontWeight.SemiBold)
-                            planned[k]?.let { Small(ReminderPlan.whenLine(it)) }
-                        }
-                        Switch(checked = ReminderPlan.isOn(s, k), onCheckedChange = { on ->
-                            if (on && Build.VERSION.SDK_INT >= 33) askNotify.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            vm.setReminder(k, on)
-                        })
-                    }
-                }
-                val flight = ReminderPlan.flight(s)
-                OutlinedButton(onClick = {
-                    val start = flight?.toLocalDate()?.toString() ?: TripLogic.tripStart(s.stops)?.toString() ?: LocalDate.now().toString()
-                    pickDate(context, start) { d ->
-                        val t = flight?.toLocalTime() ?: LocalTime.of(10, 0)
-                        TimePickerDialog(context, { _, h, m -> vm.setFlight("${d}T%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
-                    }
-                }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                    Text(if (flight == null) "Set outbound flight time" else "Flight ${TripLogic.pretty(flight.toLocalDate().toString())}, %02d:%02d".format(flight.hour, flight.minute))
-                }
-                OutlinedButton(onClick = { pickDate(context, s.insuranceEnds) { vm.setInsuranceEnds(it) } }, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (s.insuranceEnds.isBlank()) "Set travel insurance end date" else "Insurance ends ${TripLogic.pretty(s.insuranceEnds)}")
-                }
-                OutlinedButton(onClick = { pickDate(context, s.ghicExpiry) { vm.setGhicExpiry(it) } }, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (s.ghicExpiry.isBlank()) "Set GHIC card expiry date" else "GHIC expires ${TripLogic.pretty(s.ghicExpiry)}")
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(onClick = {
-                        val t = ReminderPlan.time(s.medsTime, LocalTime.of(8, 0))
-                        TimePickerDialog(context, { _, h, m -> vm.setMedsTime("%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
-                    }, modifier = Modifier.weight(1f)) { Text("Meds ${s.medsTime}") }
-                    OutlinedButton(onClick = {
-                        val t = ReminderPlan.time(s.safeTime, LocalTime.of(21, 0))
-                        TimePickerDialog(context, { _, h, m -> vm.setSafeTime("%02d:%02d".format(h, m)) }, t.hour, t.minute, true).show()
-                    }, modifier = Modifier.weight(1f)) { Text("Safe check-in ${s.safeTime}") }
-                }
-            }
+        Passport(vm)
+        Reminders(vm)
+        GlassCard(title = "Medical card") {
+            Field(s.medicalNote, { vm.setMedicalNote(it) }, "Allergies, conditions, medicines, blood type, emergency contact", singleLine = false, minLines = 3)
+            Footnote("Kept on this device only. Add it to your phone's emergency information if you want it on the lock screen.")
         }
     }
+}
+
+@Composable
+private fun Passport(vm: AppViewModel) {
+    val s by vm.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val exp = TripLogic.date(s.passportExpiry)
+    val checks = TripLogic.passportChecks(exp, s.stops, vm.packs.packs)
+    val months = TripLogic.monthsAfterTrip(exp, s.stops)
+    GlassCard(title = "Passport") {
+        LabeledRow("Expires") {
+            ValuePill(if (exp == null) "Add date" else TripLogic.pretty(s.passportExpiry)) {
+                pickDate(context, s.passportExpiry.ifBlank { LocalDate.now().plusYears(5).toString() }) { vm.setPassportExpiry(it) }
+            }
+        }
+        if (exp == null) {
+            Sub("Add your expiry date to check it against your route and get renewal reminders.")
+        } else {
+            months?.let { m ->
+                Inset(tint = if (m >= 6) Brand.Good else Brand.Warn) {
+                    Text(
+                        when {
+                            m >= 6 -> "$m months left after you get home. Fine for this trip."
+                            m >= 3 -> "Only $m months left after you get home. Under the 6 months many countries require. Renew soon."
+                            else -> "Less than 3 months left after this trip. Renew before you travel."
+                        }, fontSize = 15.sp,
+                    )
+                }
+            }
+            checks.forEach { (ok, msg) ->
+                Row(verticalAlignment = Alignment.Top) {
+                    Icon(if (ok) Icons.Filled.CheckCircle else Icons.Filled.Warning, null, tint = if (ok) Brand.Good else Brand.Warn, modifier = Modifier.padding(top = 1.dp).size(18.dp))
+                    Text(msg, fontSize = 15.sp, color = if (ok) Brand.Good else Brand.Warn, modifier = Modifier.padding(start = 8.dp))
+                }
+            }
+        }
+        Footnote("Many countries need 6 months left on arrival. Schengen needs 3 months after you leave and a passport issued in the last 10 years.")
+    }
+}
+
+@Composable
+private fun Reminders(vm: AppViewModel) {
+    val s by vm.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val askNotify = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    val planned = ReminderPlan.plan(s, vm.packs.packs).associateBy { it.kind }
+    val onCount = ReminderKind.entries.count { ReminderPlan.isOn(s, it) }
+
+    GlassCard(title = "Reminders", trailing = "$onCount of ${ReminderKind.entries.size} on") {
+        Footnote("All optional. Scheduled on this device only; nothing is sent to a server.")
+        ReminderKind.entries.forEach { k ->
+            ToggleRow(ReminderPlan.isOn(s, k), { on ->
+                if (on && Build.VERSION.SDK_INT >= 33) askNotify.launch(Manifest.permission.POST_NOTIFICATIONS)
+                vm.setReminder(k, on)
+            }) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(k.title, fontSize = 16.sp)
+                    planned[k]?.let { Footnote(ReminderPlan.whenLine(it)) }
+                }
+            }
+        }
+        HorizontalDivider(thickness = .5.dp, color = secondary.copy(alpha = .35f))
+
+        val flight = ReminderPlan.flight(s)
+        LabeledRow("Outbound flight") {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                ValuePill(flight?.let { TripLogic.pretty(it.toLocalDate().toString()) } ?: "Add date") {
+                    val day = flight?.toLocalDate()?.toString() ?: TripLogic.tripStart(s.stops)?.toString() ?: LocalDate.now().toString()
+                    pickDate(context, day) { d -> vm.setFlight("${d}T%02d:%02d".format(flight?.hour ?: 10, flight?.minute ?: 0)) }
+                }
+                ValuePill(flight?.let { "%02d:%02d".format(it.hour, it.minute) } ?: "Time") {
+                    val t = flight?.toLocalTime() ?: LocalTime.of(10, 0)
+                    val day = flight?.toLocalDate() ?: TripLogic.tripStart(s.stops) ?: LocalDate.now()
+                    pickTime(context, t) { nt -> vm.setFlight("${day}T%02d:%02d".format(nt.hour, nt.minute)) }
+                }
+            }
+        }
+        DateRow("Travel insurance ends", s.insuranceEnds) { vm.setInsuranceEnds(it) }
+        DateRow("GHIC card expires", s.ghicExpiry) { vm.setGhicExpiry(it) }
+        TimeRow("Medication", s.medsTime, LocalTime.of(8, 0), Modifier) { vm.setMedsTime(it) }
+        TimeRow("Safe check-in", s.safeTime, LocalTime.of(21, 0), Modifier) { vm.setSafeTime(it) }
+    }
+}
+
+@Composable
+private fun DateRow(label: String, value: String, onPicked: (String) -> Unit) {
+    val context = LocalContext.current
+    LabeledRow(label) { ValuePill(if (value.isBlank()) "Add date" else TripLogic.pretty(value)) { pickDate(context, value, onPicked = onPicked) } }
+}
+
+@Composable
+private fun TimeRow(label: String, value: String, fallback: LocalTime, modifier: Modifier, onPicked: (String) -> Unit) {
+    val context = LocalContext.current
+    val t = ReminderPlan.time(value, fallback)
+    LabeledRow(label, modifier) { ValuePill("%02d:%02d".format(t.hour, t.minute)) { pickTime(context, t) { onPicked("%02d:%02d".format(it.hour, it.minute)) } } }
 }

@@ -135,6 +135,14 @@ object TripLogic {
         return (a - b) / 3600.0
     }
 
+    /** "Same time as UK", "+2h vs UK", "−5.5h vs UK", as on iOS. */
+    fun hoursLabel(h: Double): String {
+        if (h == 0.0) return "Same time as UK"
+        val a = kotlin.math.abs(h)
+        val v = if (a % 1.0 == 0.0) a.toInt().toString() else String.format(Locale.UK, "%.1f", a)
+        return if (h > 0) "+${v}h vs UK" else "\u2212${v}h vs UK"
+    }
+
     // ---------- Money ----------
 
     fun money(amount: Double, symbol: String, currency: String): String {
@@ -211,7 +219,7 @@ object TripLogic {
         val n = cs.size
         val countries = if (n == 1) "1 country" else "$n countries"
         return buildList {
-            add("passport" to "Passport valid long enough (see Documents)")
+            add("passport" to "Passport valid long enough (see Passport)")
             add("insurance" to "Travel insurance covers all $countries")
             cs.filter { it.eu }.takeIf { it.isNotEmpty() }?.let { add("ghic" to "GHIC card packed for ${it.joinToString { c -> c.name }}") }
             cs.filter { !it.eu }.forEach { add("entry-${it.code}" to "Entry rules done for ${it.name}") }
@@ -247,5 +255,12 @@ object TripLogic {
             out += (!expiry.isBefore(six)) to "6 months left after you get home (${six.format(shortDate)}), as many countries require"
         }
         return out
+    }
+
+    /** Whole months of passport validity left after the trip ends. */
+    fun monthsAfterTrip(expiry: LocalDate?, stops: List<Stop>): Int? {
+        val end = tripEnd(stops) ?: return null
+        if (expiry == null) return null
+        return ChronoUnit.MONTHS.between(end, expiry).toInt()
     }
 }

@@ -8,16 +8,19 @@ Aller-Retour helps you prepare for a trip, find your way around while you're the
 
 Optional local reminders: passport expiry (9 and 6 months before), online check-in, leaving for the airport, packing, moving on to the next stop, Schengen days, travel insurance, GHIC expiry, daily medication and a daily "I'm safe" nudge. They use Android's AlarmManager and notifications on the phone itself (permissions: POST_NOTIFICATIONS, RECEIVE_BOOT_COMPLETED). Still no internet permission.
 
-## Version 1 features
+## Features
+
+Since 1.1 the Android app has the same screens, cards and wording as Aller-Retour on iPhone: glass cards over a background scene (sky, sunset, olive grove, night harbour, or one of your own photos), large titles, a floating five-tab bar and the ⓘ settings sheet.
 
 | Tab | What it does |
 |---|---|
-| **Today** | Daily brief (where you are, next stop, moving-on days), sunrise and sunset calculated on the phone, local and UK clocks with a "good time to call home?" check, and a Schengen 90/180 summary |
-| **Plan** | Route of up to 10 stops in any mix of countries, with dates, reordering and **extend my stay** (later stops move with it). Overlap and gap warnings, Schengen 90/180 counter, passport validity checks against the route, driving-permit and entry-rule summaries, and a pre-departure readiness checklist |
-| **Money** | Offline currency converter using your own rate, and an expense log in each stop's currency with a running total in pounds |
-| **Safety** | Tap-to-dial emergency numbers for the current country, Call Home with the correct international dialling format, a one-off "I am here" location you can share or show to a driver, and **Drop a pin** with a compass that guides you back |
-| **Guide** | Plugs and voltage, driving rules, tipping and etiquette, water and common scams, medicine rules, full-screen phrase cards, a menu decoder and a medical card in large text |
-| **Kit** | Packing templates (beach, city, winter, business) that adapt to your route, plus backup export and restore |
+| **Today** | Trip card (day and stop, sunset, time difference, next stop, currency, plugs, voltage), Schengen 90/180, quick convert, emergency call, coming-up reminders and a phrase of the day |
+| **Plan** | Route of up to 10 stops in any mix of countries, with gap and overlap warnings, **extend my stay** (later stops move with it) and the Schengen 90/180 counter |
+| **Money** | Offline converter using your own rate, your rate per currency, and an expense log with a running total in pounds |
+| **Guide** | **Safety & emergencies** first (tap-to-dial numbers, Call Home with the right dialling format, "I am here" as text, **Drop a pin** with distance and direction), then essentials, entry rules, money and tipping, customs, driving, health, full-screen phrase cards and a menu decoder. Filter by section and switch country |
+| **Kit** | Packing templates that adapt to your route, ready-to-go checklist, passport check against the route, optional reminders and a medical card |
+
+Settings (ⓘ) holds the glass style, background, backup export and restore, erase, licence, source and privacy.
 
 Country packs in Version 1 cover Greece, Spain, Italy, France, the United States, Japan and Thailand, for travellers whose home is the UK.
 
@@ -25,8 +28,8 @@ Country packs in Version 1 cover Greece, Spain, Italy, France, the United States
 
 - **No `INTERNET` permission.** It is removed in the manifest and CI fails the build if it ever comes back.
 - **No Google Play Services**, so the app suits de-Googled phones and F-Droid. Location uses Android's own `LocationManager`.
-- **Location only on demand**: when you tap *Get my location*, *Save pin here* or *Guide me back*. Never in the background.
-- **Colours follow your wallpaper** on Android 12 and later, with Aller-Retour blue as the fallback on older phones and as an option in Kit.
+- **Location only on demand**: when you tap *Show where I am*, *Pin this spot* or *Update*. Never in the background.
+- **Your background photo stays on the phone**: picked with Android's photo picker (no storage permission), copied into app-private storage and deleted when you erase your data.
 - **Storage stays on the phone**: one JSON file in app-private storage, excluded from Google cloud backup and device transfer.
 - **You control exports**: backups are plain JSON files that you save wherever you choose.
 - Calls open your phone's dialler, and sharing uses Android's share sheet, so you see everything before it leaves the phone.
@@ -64,7 +67,7 @@ Without those variables the release build is unsigned.
 app/src/main/assets/packs/       Country packs (one JSON file per country)
 app/src/main/java/.../data/      Models, pack loading, on-device storage
 app/src/main/java/.../logic/     Trip rules (dates, Schengen, dialling, distance, sun times), no Android code
-app/src/main/java/.../ui/        Jetpack Compose UI, one file per tab under screens/
+app/src/main/java/.../ui/        Jetpack Compose UI: glass components and backgrounds, one file per tab under screens/
 fastlane/metadata/               F-Droid / store listing text
 ```
 

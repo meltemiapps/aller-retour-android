@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.allerretour.ui.AllerRetourApp
 import io.github.allerretour.ui.AllerRetourTheme
@@ -16,8 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val vm: AppViewModel = viewModel()
-            val s by vm.state.collectAsStateWithLifecycle()
-            AllerRetourTheme(useWallpaperColours = s.useWallpaperColours) { AllerRetourApp(vm) }
+            AllerRetourTheme { AllerRetourApp(vm) }
         }
     }
 }
